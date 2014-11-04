@@ -1,0 +1,7 @@
+# ignore all file
+*
+# exept .gitignore .cpp .h
+!LightNBody
+!.gitignore
+!*.cpp
+!*.h
