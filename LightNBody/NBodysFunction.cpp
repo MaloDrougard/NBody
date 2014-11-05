@@ -7,25 +7,25 @@
 
 using namespace std;
 
-int NBodysAttraction(std::vector<Particle> * particlesSet)
+int NBodysAttraction(std::vector<Particle> * particlesSetRead, std::vector<Particle> * particlesCalculus)
 {
 	
-	vector<Particle>::iterator it = particlesSet->begin();
-	vector<Particle>::iterator innerIt = particlesSet->begin();
+	vector<Particle>::iterator it = particlesCalculus->begin();
+	vector<Particle>::iterator innerIt = particlesSetRead->begin();
 	
 	double tempAttractiveForce = 0;
 	vector<double> tempRelatedVector;
 	
 
-	while (it != particlesSet->end())
+	while (it != particlesCalculus->end())
 	{
-		innerIt = particlesSet->begin();
+		innerIt = particlesSetRead->begin();
 		double fx = 0;
 		double fy = 0;
 
-		while (innerIt != particlesSet->end()) 
+		while (innerIt != particlesSetRead->end()) 
 		{
-			if (innerIt != it) // to avoid the selfy
+			if (innerIt->id != it->id) // to avoid the selfy
 			{	
 				tempRelatedVector = unitVector(*it, *innerIt);
 				tempAttractiveForce = ((G * it->mass * (*innerIt).mass)) / squarDistance(*it, *innerIt);
