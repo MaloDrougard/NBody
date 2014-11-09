@@ -1,9 +1,14 @@
 #include "Area.h"
+#include <iostream>
+
+
+
+using namespace std;
 
 vector<Area> Area::splitArea()
 {
-	double middleX = (getX1() - getX2() / 2) + getX1();
-	double middleY = (getY1() - getY2() / 2) + getY1();
+	double middleX = ((getX2() - getX1()) / 2) + getX1();
+	double middleY = ((getY2() - getY1())/ 2) + getY1();
 
 	vector<Area> ret;
 
@@ -16,5 +21,12 @@ vector<Area> Area::splitArea()
 }
 
 bool Area::contains(Particle * p){
-	return ( (getX1() <= p->position.at(0) < getX2()) && ((getY1() <= p->position.at(1) < getY2()))  );
+	bool inX = ((getX1() <= p->position.at(0)) && (p->position.at(0) < getX2()));
+	bool inY = (getY1() <= p->position.at(1) && p->position.at(1) < getY2());
+	return (inX && inY);
+}
+
+void Area::print()
+{
+	cout << "{X:" << getX1() << "," << getX2() << " Y:" << getY1() << "," << getY2() << "}  ";
 }

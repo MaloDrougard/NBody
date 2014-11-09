@@ -1,4 +1,7 @@
 #include "Tree.h"
+#include <iostream>
+
+using namespace std;
 
 
 Tree::Tree(Tree * p, double m, vector<double> mC, Area a)
@@ -20,16 +23,14 @@ Tree::Tree(Tree * p, Area a)
 Node::Node(Tree * p, double m, vector<double> mC, Area a, Tree * c1, Tree * c2, Tree * c3, Tree * c4)
 	:Tree(p,m,mC,a) 
 {
-
-		children1 = c1;
-		children2 = c2;
-		children3 = c3;
-		children4 = c4;
+	setChildren(c1, c2, c3, c4);
 
 };
 
+
 Node::Node(Tree * p, Area a)
 :Tree(p, a){};
+
 
 Leaf::Leaf(Tree * p, Area a, Particle * part)
 :Tree(p, part->mass, part->position, a)
@@ -37,6 +38,29 @@ Leaf::Leaf(Tree * p, Area a, Particle * part)
 	particle = part;
 }
 
-Nil::Nil(Tree * p)
-: Tree(p, 0, { 0, 0 }, Area(0,0,0,0))  {}
+
+
+Nil::Nil(Tree * p, Area a)
+: Tree(p, 0, { 0, 0 }, a)  {}
+
+void Tree::print(){
+	cout << "Tree:";
+}
+
+void Node::print()
+{
+	cout << "Node: " << mass;
+}
+ 
+void Leaf::print()
+{
+	cout << "Leaf: " << mass;
+}
+
+void Nil::print()
+{
+	cout << "Nil ";
+}
+
+
 

@@ -41,24 +41,28 @@ vector<Particle> GenerateSet(const char * fileName, int maxCount)
 		
 		++count;
 	}
-
-
 	ifs.close();
 
 	return tmp;
 }
 
 
-Tree GenrateTree(vector<Particle> set, Tree * parentNode, Area area)
-{
 
+/*
+* Recursive Metohde to build a tree first call should be done with a NULL pointer as parent
+* return the root of the tree
+*/
+Tree * GenerateTree(vector<Particle> set, Tree * parentNode, Area area)
+{
 	
+	Tree * tmp = new Tree(parentNode, area);
 
 	if (set.size() == 0) {
-		return  (Nil::Nil(parentNode));
+		*tmp = Nil::Nil(parentNode, area);
 	}
 	else if (set.size() == 1) {
-		return Leaf::Leaf(parentNode, area , &(set.at(0)));
+
+		*tmp = Leaf::Leaf(parentNode, area, &(set.at(0)));
 	}
 	else{
 
@@ -67,25 +71,28 @@ Tree GenrateTree(vector<Particle> set, Tree * parentNode, Area area)
 		vector<Area> areas = area.splitArea();
 		vector<vector<Particle>> subSets = splitSet(&set, area);
 		
-		Tree child1 = GenerateTree(subSets.at(0), &t, areas.at(0));
-		Tree child2 = GenerateTree(subSets.at(1), &t, areas.at(1));
-		Tree child3 = GenerateTree(subSets.at(2), &t, areas.at(2));
-		Tree child4 = GenerateTree(subSets.at(3), &t, areas.at(3));
+		Tree * child1 = GenerateTree(subSets.at(0), &t, areas.at(0));
+		Tree * child2 = GenerateTree(subSets.at(1), &t, areas.at(1));
+		Tree * child3 = GenerateTree(subSets.at(2), &t, areas.at(2));
+		Tree * child4 = GenerateTree(subSets.at(3), &t, areas.at(3));
 
-		double m = child1.mass + child2.mass + child3.mass + child4.mass;
+		double m = child1->mass + child2->mass + child3->mass + child4->mass;
 		
 		vector<double> centerMass(2);
-		centerMass.at(0) = child1.mass * child1.massCenter.at(0) + child2.mass * child2.massCenter.at(0) +
-			child3.mass * child3.massCenter.at(0) + child4.mass * child4.massCenter.at(0);
-		centerMass.at(1) = child1.mass * child1.massCenter.at(1) + child2.mass * child2.massCenter.at(1) +
-			child3.mass * child3.massCenter.at(1) + child4.mass * child4.massCenter.at(1);
+		centerMass.at(0) = (child1->mass * child1->massCenter.at(0) + child2->mass * child2->massCenter.at(0) +
+			child3->mass * child3->massCenter.at(0) + child4->mass * child4->massCenter.at(0)) /m;
+		centerMass.at(1) = (child1->mass * child1->massCenter.at(1) + child2->mass * child2->massCenter.at(1) +
+			child3->mass * child3->massCenter.at(1) + child4->mass * child4->massCenter.at(1)) /m;
 
 
-		t.setChildren(&child1, &child2, &child3, &child4);
+		t.setChildren(child1, child2, child3, child4);
 		t.setMass(m);
 		t.setCenterMass(centerMass);
 
+		*tmp = t;
 	}
+
+	return tmp;
 
 }
 
@@ -97,7 +104,7 @@ vector<vector<Particle>> splitSet(vector<Particle> * set, Area area){
 
 	vector<Particle>::iterator it = set->begin();
 
-	while (it == set->end()){
+	while (it != set->end()){
 		if (areas.at(0).contains(&(*it))) { 
 			subSets.at(0).push_back(*it); 
 		}
@@ -110,9 +117,9 @@ vector<vector<Particle>> splitSet(vector<Particle> * set, Area area){
 		else if (areas.at(3).contains(&(*it))) {
 			subSets.at(3).push_back(*it);
 		}
-		
+		++it;
 	}
-	
+
 	return subSets;
 
 }

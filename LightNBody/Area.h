@@ -21,7 +21,7 @@ public:
 		ys[1] = y2;
 
 		center[0] = ((x2 - x1) / 2) + x1;
-		center[1] = ((y1 - y2) / 2) + y1; 
+		center[1] = ((y2 - y1) / 2) + y1; 
 	};
 
 	Area(){	};
@@ -29,10 +29,12 @@ public:
 	double getX1(){	return xs[0];};
 	double getX2(){	return xs[1];};
 	double getY1(){	return ys[0];};
-	double getY2(){	return ys[0];};
+	double getY2(){	return ys[1];};
 
 	vector<Area> splitArea();
 	
 	bool contains(Particle * p);
+
+	void print();
 
 };
