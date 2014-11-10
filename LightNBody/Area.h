@@ -37,4 +37,6 @@ public:
 
 	void print();
 
+	double getWitdh(){ return (xs[1] - xs[0]); };
+
 };

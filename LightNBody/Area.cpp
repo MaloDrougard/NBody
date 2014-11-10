@@ -13,7 +13,7 @@ vector<Area> Area::splitArea()
 	vector<Area> ret;
 
 	ret.push_back(Area(getX1(), middleX, getY1(), middleY));
-	ret.push_back(Area(middleX, getX2(), getY1(), middleX));
+	ret.push_back(Area(middleX, getX2(), getY1(), middleY));
 	ret.push_back(Area(middleX, getX2(), middleY, getY2()));
 	ret.push_back(Area(getX1(), middleX, middleY, getY2()));
 	 

@@ -50,3 +50,18 @@ int timeSummary(time_t start, time_t end, const char * fileName) {
 
 	return 1;
 }
+
+
+int initFileBarnesHut(const char * fileName, int numberParticles, int numberSlots, double deltaTime, double accuracy){
+
+	ofstream ofs;
+	ofs.open(fileName, std::ofstream::out);
+	ofs << "METHOD: BarnesHut ";
+	ofs << "NUMBER_OF_PARTICLE: " << numberParticles << "  ";
+	ofs << "NUMBER_OF_SLOT: " << numberSlots << "  ";
+	ofs << "DELTA_TIME: " << deltaTime;
+	ofs << "ACCURACY: " << accuracy << endl;
+	ofs.close();
+
+	return 1;
+}

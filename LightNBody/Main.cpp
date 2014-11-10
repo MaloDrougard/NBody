@@ -13,32 +13,36 @@
 
 using namespace std;
 
-char GENERATORFILE[100]  = "tab1024";
+char GENERATORFILE[100]  = "tab128";
 char RESULTFILE[100]  = "result.txt";
 int COUNTPARTICLE = 100000;
 int NUMSLOT = 20;
 double DELTATIME = 1;
-Area baseArea( -0.5, 0.5, -0.5, 0.5); 
+double ACCURACY = 0.0;
+Area baseArea( -50, 50, -50 , 50); 
 
 int main()
 {	
 	time_t startTime;
 	time_t endTime;
+	vector<Particle>  set;
+	vector<Particle> * rest;
 	
 	Tree * root;
 
 	/* get infos from user */
 	cout << "Hello Beatch!" << endl;
 	cout << "Enter the file name of the input file: " << endl;
-	//gets(GENERATORFILE);
+	gets(GENERATORFILE);
 
 	cout << "Enter the file name of the output file: " << endl;
-	//gets(RESULTFILE);
+	gets(RESULTFILE);
 
 
 	/* initialization */
-	vector<Particle>  set = GenerateSet(GENERATORFILE, COUNTPARTICLE);
-	initFile(RESULTFILE, set.size() , NUMSLOT, DELTATIME);
+	rest = new vector<Particle>(0);
+	set = GenerateSet(GENERATORFILE, COUNTPARTICLE);
+	initFileBarnesHut(RESULTFILE, set.size() , NUMSLOT, DELTATIME, ACCURACY);
 	printToFile(&set, RESULTFILE);
 			
 	int count = 0;
@@ -48,10 +52,13 @@ int main()
 	cout << "Program start at: " << ctime(&startTime) << endl;
 	time(&startTime);
 
+
+
 	while (count < NUMSLOT){
 		root = GenerateTree(set, (Tree *)NULL, baseArea);
-		NBodysAttraction(&set);
-		
+		BarnesHutAttractions(&set, root, ACCURACY);
+		NBodysTravel(&set, DELTATIME);
+		++count;
 	}
 
 
