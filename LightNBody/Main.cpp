@@ -43,7 +43,7 @@ int main()
 	/* initialization */
 	rest = new vector<Particle>(0);
 	set = GenerateSet(GENERATORFILE, COUNTPARTICLE);
-	initFileBarnesHut(RESULTFILE, set.size() , NUMSLOT, DELTATIME, ACCURACY);
+	initFileBarnesHut(RESULTFILE, NUMTHREADS, set.size() , NUMSLOT, DELTATIME, ACCURACY);
 	printToFile(&set, RESULTFILE);
 			
 	int count = 0;

@@ -52,11 +52,12 @@ int timeSummary(time_t start, time_t end, const char * fileName) {
 }
 
 
-int initFileBarnesHut(const char * fileName, int numberParticles, int numberSlots, double deltaTime, double accuracy){
+int initFileBarnesHut(const char * fileName, int numThreads, int numberParticles, int numberSlots, double deltaTime, double accuracy){
 
 	ofstream ofs;
 	ofs.open(fileName, std::ofstream::out);
-	ofs << "METHOD: BarnesHut ";
+	ofs << "METHOD: BarnesHutMultiThreads ";
+	ofs << "NUMBER_OF_THREADS: " << numThreads << endl;
 	ofs << "NUMBER_OF_PARTICLE: " << numberParticles << "  ";
 	ofs << "NUMBER_OF_SLOT: " << numberSlots << "  ";
 	ofs << "DELTA_TIME: " << deltaTime << " " ;
