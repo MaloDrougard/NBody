@@ -19,7 +19,7 @@ int COUNTPARTICLE = 100000;
 int NUMSLOT = 20;
 double DELTATIME = 1;
 double ACCURACY = 0.5;
-int NUMTHREADS = 4;	
+int NUMTHREADS = 32;	
 Area baseArea( -50, 50, -50 , 50); 
 
 int main()
@@ -39,6 +39,14 @@ int main()
 	cout << "Enter the file name of the output file: " << endl;
 	gets(RESULTFILE);
 
+	cout << "Enter the accuracy: 0 is the best, 1 the least " << endl;
+	cin >> ACCURACY;
+	cin.ignore();
+	
+	cout << "Enter the number of threads:" << endl;
+	cin >> NUMTHREADS;
+	cin.ignore();
+	
 
 	/* initialization */
 	rest = new vector<Particle>(0);
@@ -124,7 +132,7 @@ int main()
 
 	cout << "Execution time: " << endTime - startTime << endl;
 	cout << "Type any character to close this program "  << endl;
-	getchar();
+	cin.get();
 
 	return 0;
 }
