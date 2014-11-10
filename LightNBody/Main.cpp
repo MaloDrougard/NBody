@@ -19,6 +19,7 @@ int COUNTPARTICLE = 100000;
 int NUMSLOT = 20;
 double DELTATIME = 1;
 double ACCURACY = 0.5;
+int NUMTHREADS = 4;	
 Area baseArea( -50, 50, -50 , 50); 
 
 int main()
@@ -54,13 +55,63 @@ int main()
 
 
 
-	while (count < NUMSLOT){
-		rest->clear();
-		root = GenerateTree(set, (Tree *)NULL, baseArea);
-		BarnesHutAttractions(&set, root, ACCURACY);
-		NBodysTravel(&set, DELTATIME);
-		++count;
+	/* preparing the parallel section */
+	int subSetSize = set.size() / NUMTHREADS;
+	vector<vector<Particle>> subSet;
+	vector<Particle>::iterator it = set.begin();
+	for (int i = 0; i < NUMTHREADS - 1; ++i) {
+		vector<Particle> temp(it, it + subSetSize);
+		subSet.push_back(temp);
+		it = it + subSetSize;
 	}
+	vector<Particle> last(it, set.end()); //it's possible that the numthread is not a divisor of the set.size
+	subSet.push_back(last);
+
+	int tid;
+	time_t threadTime;
+
+
+#pragma omp parallel private(tid, count, threadTime) shared(set, root) num_threads(NUMTHREADS)
+	{
+		tid = omp_get_thread_num();
+
+
+
+	
+		time(&threadTime);
+		cout << "Thread: " << tid << "  Start at:" << ctime(&threadTime) << endl;
+		count = 0;
+
+		/*
+		* Here start the core of the software
+		*/
+		while (count < NUMSLOT){
+#pragma omp single
+			{
+				root = GenerateTree(set, (Tree *)NULL, baseArea);
+			}
+
+			BarnesHutAttractions(&(subSet.at(tid)), root, ACCURACY);
+			NBodysTravel(&(subSet.at(tid)), DELTATIME);
+			++count;
+
+#pragma omp barrier // the thread have all update her part
+#pragma omp single
+			{
+				set.clear();
+				for (int i = 0; i < NUMTHREADS; ++i) {
+					set.insert(set.end(), subSet.at(i).begin(), subSet.at(i).end());
+				}
+			}
+		} 
+		/*
+		* Here end the core of the software
+		*/
+
+		time(&threadTime);
+		cout << "Thread: " << tid << "  End at:" << ctime(&threadTime) << "Prcoess particles: " << subSet.at(tid).size() << endl;
+
+	}  /* All threads join master thread and terminate */
 
 
 
