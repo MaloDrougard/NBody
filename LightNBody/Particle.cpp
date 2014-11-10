@@ -1,5 +1,5 @@
 #include "Particle.h"
-
+#include <vector>
 #include <math.h>
 
 using namespace std;
@@ -99,7 +99,10 @@ vector<double> Particle::unitVectorToPoint(vector<double> point)
 	double x = point.at(0) - position.at(0);
 	double y = point.at(1) - position.at(1);
 	double norme = distanceToPoint(point);
-	vector<double> ret = { x / norme, y / norme };
+
+	vector<double> ret (2);
+	ret.at(0) =  x / norme; 
+	ret.at(1) = y / norme ;
 	return ret;
 	
 }

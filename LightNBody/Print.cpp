@@ -59,7 +59,7 @@ int initFileBarnesHut(const char * fileName, int numberParticles, int numberSlot
 	ofs << "METHOD: BarnesHut ";
 	ofs << "NUMBER_OF_PARTICLE: " << numberParticles << "  ";
 	ofs << "NUMBER_OF_SLOT: " << numberSlots << "  ";
-	ofs << "DELTA_TIME: " << deltaTime;
+	ofs << "DELTA_TIME: " << deltaTime << " " ;
 	ofs << "ACCURACY: " << accuracy << endl;
 	ofs.close();
 

@@ -16,7 +16,8 @@ Tree::Tree(Tree * p, Area a)
 {
 	parent = p;
 	mass = 0;
-	massCenter = { 0, 0 };
+	massCenter.push_back(0);
+	massCenter.push_back(0);
 	area = a;
 }
 
@@ -41,7 +42,7 @@ Leaf::Leaf(Tree * p, Area a, Particle * part)
 
 
 Nil::Nil(Tree * p, Area a)
-: Tree(p, 0, { 0, 0 }, a)  {}
+: Tree(p, a)  {}
 
 void Tree::print(){
 	cout << "Tree:";

@@ -1,5 +1,6 @@
 #include "Generator.h"
 #include "Particle.h"
+#include "Area.h"
 #include <iostream>
 #include <fstream>
 
@@ -77,7 +78,7 @@ Tree * GenerateTree(vector<Particle> set, Tree * parentNode, Area area, vector<P
 		Tree * child4 = GenerateTree(subSets.at(3), tmp, areas.at(3), outOfRangeSet);
 
 
-
+		
 		if (subSets.at(4).size() != 0)
 		{
 			cout << "WARRNING: There are " << subSets.at(4).size() << " particles out of area ";

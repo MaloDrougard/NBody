@@ -18,7 +18,7 @@ char RESULTFILE[100]  = "result.txt";
 int COUNTPARTICLE = 100000;
 int NUMSLOT = 20;
 double DELTATIME = 1;
-double ACCURACY = 0.0;
+double ACCURACY = 0.5;
 Area baseArea( -50, 50, -50 , 50); 
 
 int main()
@@ -55,6 +55,7 @@ int main()
 
 
 	while (count < NUMSLOT){
+		rest->clear();
 		root = GenerateTree(set, (Tree *)NULL, baseArea);
 		BarnesHutAttractions(&set, root, ACCURACY);
 		NBodysTravel(&set, DELTATIME);

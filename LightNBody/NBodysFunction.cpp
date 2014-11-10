@@ -85,14 +85,14 @@ vector<double> calculateAttraction(Particle p, Tree * look, double accurancy)
 	if (look->isNil()){	
 	}
 	else if (look->isLeaf() ){
-		if (look->getParticle()->id != p.id){
+		
 			vector<double> directionUnit = p.unitVectorToPoint(look->massCenter);
 			double squarNorm = p.squarDistanceToPoint(look->massCenter);
 			if (squarNorm != 0){
 				f.at(0) = (directionUnit.at(0) * G * look->mass * p.mass) / squarNorm;
 				f.at(1) = (directionUnit.at(1) * G * look->mass * p.mass) / squarNorm;
 			}
-		}
+		
 	}
 	else if (look->isNode()){
 		if ( look->area.getWitdh() / p.distanceToPoint(look->massCenter) < accurancy) 
