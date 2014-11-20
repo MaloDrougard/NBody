@@ -48,6 +48,32 @@ int NBodysAttraction(std::vector<Particle> * particlesSet)
 	
 }
 
+int FakeNBodysAttraction(int n)
+{
+	int p = 0;
+	int f = 0;
+	for (int i = 0; i < n* (n - 1); ++i)
+	{
+		// cost of the unit vector
+		p = pow(3, 2) + pow(19.99, 4);
+		sqrt(p);
+		12 + 23 + 12 + 67;
+		4 / 392; 3 / 123;
+		//end cost of unit vector
+
+		f = (G * 3 * 3) / pow(3, 2) + pow(19.99, 4);
+		f = f + f * 3;
+		f = f + f * 0.6;
+
+		// cost of set Accelaration
+		3 / 7;
+		34 / 8;
+	}
+
+
+	return 0;
+}
+
 int NBodysTravel(std::vector<Particle> * particlesSet, double time)
 {
 
@@ -56,5 +82,17 @@ int NBodysTravel(std::vector<Particle> * particlesSet, double time)
 
 	}
 
+	return 0;
+}
+
+int FakeNBodysTravel(int n)
+{	
+	int a = 0;
+	int b = 0;
+	for (int i = 0; i < n;  ++i){
+		a = 1 + 1 * 1 + 0.5 * 1 * 1 * 1;
+		b = 2 + 2 * 1 + 0.5 * 2 * 2 * 2;
+	}
+	
 	return 0;
 }

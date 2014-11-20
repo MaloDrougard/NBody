@@ -45,8 +45,8 @@ int main()
 	time(&startTime);
 
 	while (count < NUMSLOT){
-		NBodysAttraction(&set);
-		NBodysTravel(&set, DELTATIME);
+		FakeNBodysAttraction(set.size());
+		FakeNBodysTravel(set.size());
 		++count;
 	}
 

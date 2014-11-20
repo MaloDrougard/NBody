@@ -10,4 +10,7 @@
 int NBodysAttraction(std::vector<Particle> * particlesSet);
 int NBodysTravel(std::vector<Particle> * particlesSet, double time );
 
+int FakeNBodysAttraction(int n); // do the same number of operation as NbodysAttraction but without any call and setup
+int FakeNBodysTravel(int n);
+
 const double G = 1; // 0.0000000000667259;
