@@ -2,6 +2,8 @@
 *
 # exept .gitignore .cpp .h
 !LightNBody
+!windowsDisplay
 !.gitignore
 !*.cpp
 !*.h
+!*.txt
