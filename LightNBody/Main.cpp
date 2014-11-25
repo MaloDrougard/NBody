@@ -43,7 +43,7 @@ int main()
 	time(&startTime);
 	cout << "Program start at: " << ctime(&startTime) << endl;
 	time(&startTime);
-
+		
 	while (count < NUMSLOT){
 		FakeAccessAttraction(&set);
 		FakeAccessTravel(&set);
