@@ -27,8 +27,8 @@ int NBodysAttraction(std::vector<Particle> * particlesSetRead, std::vector<Parti
 		{
 			if (innerIt->id != it->id) // to avoid the selfy
 			{	
-				tempRelatedVector = unitVector(*it, *innerIt);
-				tempAttractiveForce = ((G * it->mass * (*innerIt).mass)) / squarDistance(*it, *innerIt);
+				tempRelatedVector = unitVector(&(*it), &(*innerIt));
+				tempAttractiveForce = ((G * it->mass * (*innerIt).mass)) / squarDistance(&(*it), &(*innerIt));
 				fx = fx + tempAttractiveForce * tempRelatedVector.at(0);
 				fy = fy + tempAttractiveForce * tempRelatedVector.at(1);
 
@@ -39,7 +39,7 @@ int NBodysAttraction(std::vector<Particle> * particlesSetRead, std::vector<Parti
 		vector<double> temp;
 		temp.push_back(fx);
 		temp.push_back(fy);
-        it->setAccelerationByForce(temp);
+        it->setAccelerationByForce(&temp);
 
 		++it;
 	}

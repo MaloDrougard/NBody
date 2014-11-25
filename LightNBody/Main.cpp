@@ -62,7 +62,8 @@ int main()
 	
 
 #pragma omp parallel private(tid, count, threadTime) shared(set) num_threads(NUMTHREADS)
-{
+{	
+	count = 0;
 	tid = omp_get_thread_num();
 	time(&threadTime);
 	cout << "Thread: " << tid << "  Start at:" << ctime(&threadTime) << endl;
