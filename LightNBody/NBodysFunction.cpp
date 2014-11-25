@@ -48,20 +48,60 @@ int NBodysAttraction(std::vector<Particle> * particlesSet)
 	
 }
 
+int FakeAccessAttraction(vector<Particle> *set)
+{	
+	
+	vector<Particle>::iterator it = set->begin();
+	vector<Particle>::iterator innerIt = set->begin();
+	double p = 0;
+	int f = 0;
+
+	while (it != set->end())
+	{
+		int tmp = it->position.at(0) / 2;
+
+		while (innerIt != set->end()) 
+			{
+				if (innerIt != it) // to avoid the selfy
+				{	
+					tmp = innerIt->position.at(0) + tmp;
+					// cost of the unit vector
+						p = pow(3.0, 2) + pow(19.99, 4);
+						sqrt(p);
+						12 + 23 + 12 + 67;
+						4 / 392; 3 / 123;
+						//end cost of unit vector
+
+						f = (G * 3 * 3) / pow(3.0, 2) + pow(19.99, 4);
+						f = f + f * 3;
+						f = f + f * 0.6;
+
+						// cost of set Accelaration
+						3 / 7;
+						34 / 8;
+				}
+				++innerIt;
+		}
+		it->position.at(0) = tmp;
+		++it;
+	}
+}
+
+
 int FakeNBodysAttraction(int n)
 {
-	int p = 0;
+	double p = 0;
 	int f = 0;
 	for (int i = 0; i < n* (n - 1); ++i)
 	{
 		// cost of the unit vector
-		p = pow(3, 2) + pow(19.99, 4);
+		p = pow(3.0, 2) + pow(19.99, 4);
 		sqrt(p);
 		12 + 23 + 12 + 67;
 		4 / 392; 3 / 123;
 		//end cost of unit vector
 
-		f = (G * 3 * 3) / pow(3, 2) + pow(19.99, 4);
+		f = (G * 3 * 3) / pow(3.0, 2) + pow(19.99, 4);
 		f = f + f * 3;
 		f = f + f * 0.6;
 
@@ -95,4 +135,11 @@ int FakeNBodysTravel(int n)
 	}
 	
 	return 0;
+}
+
+int FakeAccessTravel(std::vector<Particle> * set)
+{
+	for (int i = 0 ; i < set->size() ; ++i) {
+		set->at(i).mass = set->at(i).mass + 1;
+	}
 }

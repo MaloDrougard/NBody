@@ -45,8 +45,8 @@ int main()
 	time(&startTime);
 
 	while (count < NUMSLOT){
-		FakeNBodysAttraction(set.size());
-		FakeNBodysTravel(set.size());
+		FakeAccessAttraction(&set);
+		FakeAccessTravel(&set);
 		++count;
 	}
 
