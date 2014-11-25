@@ -22,21 +22,23 @@ public:
 
 	// calculate the new position after time t
 	void calculateNewPosition(double t); // in sec
-	void setAcceleration(vector <double> a);
-	void setAccelerationByForce(vector<double> f);
+	void updateVelocity(double t);
+	void setAcceleration(vector <double> * a);
+	void setAccelerationByForce(vector<double> * f);
 
-	double distanceToPoint(vector<double> point);
-	double squarDistanceToPoint(vector<double> point);
-	vector<double> unitVectorToPoint(vector<double> point);
+
+	double distanceToPoint(vector<double> * point);
+	double squarDistanceToPoint(vector<double> *  point);
+	vector<double> unitVectorToPoint(vector<double> * point);
+
+
 };
 
 
-double squarDistance(Particle p1, Particle p2);
-double myDistance(Particle p1, Particle p2);
-
-
+double squarDistance(Particle* p1, Particle* p2);
+double myDistance(Particle * p1, Particle * p2);
 
 // return unit vector that have the direction of the line between p1 p2
 // the sens is from p1 to p2
- vector<double> unitVector(Particle p1, Particle p2); 
+ vector<double> unitVector(Particle * p1, Particle * p2); 
 

@@ -8,50 +8,9 @@
 
 using namespace std;
 
-int NBodysAttraction(std::vector<Particle> * particlesSet)
-{
-	
-	vector<Particle>::iterator it = particlesSet->begin();
-	vector<Particle>::iterator innerIt = particlesSet->begin();
-	
-	double tempAttractiveForce = 0;
-	vector<double> tempRelatedVector;
-	
-
-	while (it != particlesSet->end())
-	{
-		innerIt = particlesSet->begin();
-		double fx = 0;
-		double fy = 0;
-
-		while (innerIt != particlesSet->end()) 
-		{
-			if (innerIt != it) // to avoid the selfy
-			{	
-				tempRelatedVector = unitVector(*it, *innerIt);
-				tempAttractiveForce = ((G * it->mass * (*innerIt).mass)) / squarDistance(*it, *innerIt);
-				fx = fx + tempAttractiveForce * tempRelatedVector.at(0);
-				fy = fy + tempAttractiveForce * tempRelatedVector.at(1);
-
-			}
-			++innerIt;
-		};
-
-		vector<double> temp;
-		temp.push_back(fx);
-		temp.push_back(fy);
-        it->setAccelerationByForce(temp);
-
-		++it;
-	}
-
-	return 0;
-	
-}
-
 int NBodysTravel(std::vector<Particle> * particlesSet, double time)
 {
-	for (int i = 0; i < (*particlesSet).size(); ++i ){
+	for (int i = 0; i < (*particlesSet).size(); ++i){
 		(*particlesSet).at(i).calculateNewPosition(time);
 	}
 	return 0;
@@ -65,8 +24,8 @@ int BarnesHutAttractions(std::vector<Particle> * set, Tree *  look, double accur
 
 	while (it != set->end())
 	{
-		force = calculateAttraction( *it,  look, accurancy);
-		it->setAccelerationByForce(force);
+		force = calculateAttraction( &(*it),  look, accurancy);
+		it->setAccelerationByForce(&force);
 		++it;
 	}
 
@@ -75,7 +34,7 @@ int BarnesHutAttractions(std::vector<Particle> * set, Tree *  look, double accur
 
 }
 
-vector<double> calculateAttraction(Particle p, Tree * look, double accurancy)
+vector<double> calculateAttraction(Particle * p, Tree * look, double accurancy)
 {
 	vector<double> f (2);
 	f.at(0) = 0;
@@ -86,22 +45,22 @@ vector<double> calculateAttraction(Particle p, Tree * look, double accurancy)
 	}
 	else if (look->isLeaf() ){
 		
-			vector<double> directionUnit = p.unitVectorToPoint(look->massCenter);
-			double squarNorm = p.squarDistanceToPoint(look->massCenter);
+			vector<double> directionUnit = p->unitVectorToPoint(&(look->massCenter));
+			double squarNorm = p->squarDistanceToPoint(&(look->massCenter));
 			if (squarNorm != 0){
-				f.at(0) = (directionUnit.at(0) * G * look->mass * p.mass) / squarNorm;
-				f.at(1) = (directionUnit.at(1) * G * look->mass * p.mass) / squarNorm;
+				f.at(0) = (directionUnit.at(0) * G * look->mass * p->mass) / squarNorm;
+				f.at(1) = (directionUnit.at(1) * G * look->mass * p->mass) / squarNorm;
 			}
 		
 	}
 	else if (look->isNode()){
-		if ( look->area.getWitdh() / p.distanceToPoint(look->massCenter) < accurancy) 
+		if ( look->area.getWitdh() / p->distanceToPoint(&(look->massCenter)) < accurancy) 
 		{
-			vector<double> directionUnit = p.unitVectorToPoint(look->massCenter);
-			double squarNorm = p.distanceToPoint(look->massCenter);
+			vector<double> directionUnit = p->unitVectorToPoint(&(look->massCenter));
+			double squarNorm = p->distanceToPoint(&(look->massCenter));
 			if (squarNorm != 0){
-				f.at(0) = (directionUnit.at(0) * G * look->mass * p.mass) / squarNorm;
-				f.at(1) = (directionUnit.at(1) * G * look->mass * p.mass) / squarNorm;
+				f.at(0) = (directionUnit.at(0) * G * look->mass * p->mass) / squarNorm;
+				f.at(1) = (directionUnit.at(1) * G * look->mass * p->mass) / squarNorm;
 			}
 		}
 		else
