@@ -6,7 +6,7 @@
 #include <math.h> 
 
 using namespace std;
-int OPPERCYCLE = 30;
+int OPPERCYCLE = 10000;
 int NBodysAttraction(std::vector<Particle> * particlesSet)
 {
 	
@@ -33,7 +33,7 @@ int NBodysAttraction(std::vector<Particle> * particlesSet)
 			if (innerIt != it) // to avoid the selfy
 			{	
 				tempRelatedVector = unitVector(&(*it), &(*innerIt));
-				tempAttractiveForce = ((G * it->mass * (*innerIt).mass)) / squarDistance(&(*it), &(*innerIt));
+				tempAttractiveForce = ((G * it->mass * innerIt->mass)) / squarDistance(&(*it), &(*innerIt));
 				fx = fx + tempAttractiveForce * tempRelatedVector.at(0);
 				fy = fy + tempAttractiveForce * tempRelatedVector.at(1);
 
@@ -60,12 +60,15 @@ void FakeAccessAttraction(vector<Particle> *set)
 	vector<double> tmpP;
 	vector<double> tmpV;
 
+	double p = 0;
+
 	while (it != set->end())
 	{
 		int tmp = it->position.at(0) / 2;
 		tmpA.clear();
 		tmpP.clear();
 		tmpV.clear();
+
 
 		while (innerIt != set->end()) 
 			{
@@ -87,6 +90,11 @@ void FakeAccessAttraction(vector<Particle> *set)
 						tmpV.at(1) = tmpV.at(1) + innerIt->velocity.at(1) / 16;
 						tmpP.at(0) = tmpP.at(0) + innerIt->position.at(0) / 16;
 						tmpP.at(1) = tmpP.at(1) + innerIt->position.at(1) / 16;
+						
+						p = pow(3.0, 2) + pow(19.99, 4);
+						sqrt(p);
+						
+						
 					
 					}
 					
