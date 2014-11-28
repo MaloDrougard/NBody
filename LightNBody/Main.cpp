@@ -21,8 +21,8 @@ double DELTATIME = 1;
 
 int main()
 {	
-	time_t startTime;
-	time_t endTime;
+	double startTime;
+	double endTime;
 
 	/* get infos from user */
 	cout << "Hello Beatch!" << endl;
@@ -40,9 +40,8 @@ int main()
 	int count = 0;
 	 
 	/* core of the program */
-	time(&startTime);
-	cout << "Program start at: " << ctime(&startTime) << endl;
-	time(&startTime);
+	cout << "Program start" << endl;
+	startTime = omp_get_wtime();
 
 	while (count < NUMSLOT){
 		NBodysAttraction(&set);
@@ -51,7 +50,7 @@ int main()
 	}
 
 	/* ending */
-	time(&endTime);
+	endTime = omp_get_wtime();
 
 	printToFile(&set, RESULTFILE);
 	timeSummary(startTime, endTime, RESULTFILE);
