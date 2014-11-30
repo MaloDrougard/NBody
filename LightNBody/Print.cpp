@@ -37,20 +37,6 @@ int initFile(const char * fileName, int numberParticles, int numberSlots, double
 	return 1;
 }
 
-int timeSummary(time_t start, time_t end, const char * fileName) {
-	
-	ofstream ofs;
-	ofs.open(fileName, std::ofstream::app);
-
-	ofs << "\nPROGRAM START: " << ctime(&start) << endl;
-	ofs << "PROGRAM END: " << ctime(&end) << endl;
-	ofs << "EXECUTION TIME: " << end - start << endl;
-
-	ofs.close();
-
-	return 1;
-}
-
 
 int initFileBarnesHut(const char * fileName, int numThreads, int numberParticles, int numberSlots, double deltaTime, double accuracy){
 
@@ -66,3 +52,96 @@ int initFileBarnesHut(const char * fileName, int numThreads, int numberParticles
 
 	return 1;
 }
+
+int timeTable(vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes, const char * fileName)
+{
+	ofstream ofs;
+	ofs.open(fileName, std::ofstream::app);
+	ofs << "TIME TABLE:" << endl;
+	ofs << "THREAD " << "TOTALTIME " << "PARALLELTIME " << "SOLOTIME " << endl;
+	for (int i = 0; i < totalTimes->size(); ++i)
+	{
+		ofs << i << " " << totalTimes->at(i) << " " << paraTimes->at(i) << " " << soloTimes->at(i) << endl;
+	}
+
+	ofs.close();
+
+	return 1;
+}
+
+int timeTableToConsole(vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes)
+{
+	cout << "TIME TABLE:" << endl;
+	cout << "THREAD " << "TOTALTIME " << "PARALLELTIME " << "SOLOTIME " << endl;
+	for (int i = 0; i < totalTimes->size(); ++i)
+	{
+		cout << i << " " << totalTimes->at(i) << " " << paraTimes->at(i) << " " << soloTimes->at(i) << endl;
+	}
+}
+
+
+int timeSummary(double start, double end, const char * fileName, vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes) {
+
+	ofstream ofs;
+	ofs.open(fileName, std::ofstream::app);
+
+	ofs << "TOTAL EXECUTION TIME: " << end - start << endl;
+	ofs << "EXECUTION TIME MEANS OF EACH THREAD: " << mean(totalTimes) << endl;
+	ofs << "PARALLEL MEAN EXECUTION TIME: " << mean(paraTimes) << endl;
+	ofs << "TOTAL OF SEQUANTIAL EXECUTION TIME: " << sum(soloTimes) << endl;
+	double dispearTime = mean(totalTimes) - mean(paraTimes) - sum(soloTimes);
+	ofs << "DISPEAR TIME: " << dispearTime << endl;
+
+	ofs.close();
+
+	return 1;
+}
+
+
+
+int timeSummaryToConsole(double start, double end, vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes) {
+		
+	cout << "TOTAL EXECUTION TIME: " << end - start << endl;
+	cout << "EXECUTION TIME MEANS OF EACH THREAD: " << mean(totalTimes) << endl;
+	cout << "PARALLEL MEAN EXECUTION TIME: " << mean(paraTimes) << endl;
+	cout << "TOTAL OF SEQUANTIAL EXECUTION TIME: " << sum(soloTimes) << endl;
+	double dispearTime = mean(totalTimes) - mean(paraTimes) - sum(soloTimes);
+	cout << "DISPEAR TIME: " << dispearTime << endl;
+	
+	return 1;
+}
+
+double mean(vector<double> * v)
+{	
+	double r = 0;
+	for (int i = 0; i < v->size(); ++i)
+	{
+		r = r + v->at(i);
+	}
+	r = r / v->size();
+	return r;
+}
+
+double sum(vector<double> * v)
+{
+	double r = 0;
+	for (int i = 0; i < v->size(); ++i)
+	{
+		r = r + v->at(i);
+	}
+	return r;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

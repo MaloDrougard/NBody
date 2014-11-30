@@ -24,8 +24,8 @@ Area baseArea( -50, 50, -50 , 50);
 
 int main()
 {	
-	time_t startTime;
-	time_t endTime;
+	double startTime;
+	double endTime;
 	vector<Particle>  set;
 	vector<Particle> * rest;
 	
@@ -57,9 +57,9 @@ int main()
 	int count = 0;
 	 
 	/* core of the program */
-	time(&startTime);
-	cout << "Program start at: " << ctime(&startTime) << endl;
-	time(&startTime);
+	startTime = omp_get_wtime();
+	cout << "Program start at: " << startTime << endl;
+	startTime = omp_get_wtime();
 
 
 
@@ -75,49 +75,68 @@ int main()
 	vector<Particle> last(it, set.end()); //it's possible that the numthread is not a divisor of the set.size
 	subSet.push_back(last);
 
+	vector<double>  parallelTimes;
+	vector<double> soloTimes;
+	vector<double> totalTimes;
+	for (int i = 0; i < NUMTHREADS; ++i)
+	{
+		parallelTimes.push_back(0);
+		totalTimes.push_back(0);
+		soloTimes.push_back(0);
+	}
+
 	int tid;
-	time_t threadTime;
+	double threadStartTime;
+	double threadEndTime;
+	double threadStartParaTime;
+	double threadEndParaTime;
+	double singleThreadStartTime;
+	double singleThreadEndTime;
 
-
-#pragma omp parallel private(tid, count, threadTime) shared(set, root) num_threads(NUMTHREADS)
+#pragma omp parallel private(tid, count, threadStartTime, threadEndTime) shared(set, root) num_threads(NUMTHREADS)
 	{
 		tid = omp_get_thread_num();
-
-
-
-	
-		time(&threadTime);
-		cout << "Thread: " << tid << "  Start at:" << ctime(&threadTime) << endl;
+		cout << "Thread: " << tid << "  Start!" << endl;
 		count = 0;
+		threadStartTime = omp_get_wtime();
 
-		/*
-		* Here start the core of the software
-		*/
+		//Core of the software
 		while (count < NUMSLOT){
 #pragma omp single
-			{
+			{	
+				cout << "Thread " << tid << " generate the tree."  ;
+				singleThreadStartTime = omp_get_wtime();
 				root = GenerateTree(set, (Tree *)NULL, baseArea);
-			}
+				singleThreadEndTime = omp_get_wtime();
+				soloTimes.at(tid) = soloTimes.at(tid) + (singleThreadEndTime - singleThreadStartTime);
+				cout << "That take " << singleThreadEndTime - singleThreadStartTime << endl;
+			}// end of the single part
+			
+			threadStartParaTime = omp_get_wtime();
 
 			BarnesHutAttractions(&(subSet.at(tid)), root, ACCURACY);
 			NBodysTravel(&(subSet.at(tid)), DELTATIME);
 			++count;
-
+			
+			threadEndParaTime = omp_get_wtime();
+			parallelTimes.at(tid) = parallelTimes.at(tid) + (threadEndParaTime - threadStartParaTime);
 #pragma omp barrier // the thread have all update her part
 #pragma omp single
 			{
+				cout << "Thread " << tid << " update the set.";
+				singleThreadStartTime = omp_get_wtime();
 				set.clear();
 				for (int i = 0; i < NUMTHREADS; ++i) {
 					set.insert(set.end(), subSet.at(i).begin(), subSet.at(i).end());
 				}
+				singleThreadEndTime = omp_get_wtime();
+				soloTimes.at(tid) = soloTimes.at(tid) + (singleThreadEndTime - singleThreadStartTime);
+				cout << "That take " << singleThreadEndTime - singleThreadStartTime << endl;
 			}
 		} 
-		/*
-		* Here end the core of the software
-		*/
-
-		time(&threadTime);
-		cout << "Thread: " << tid << "  End at:" << ctime(&threadTime) << "Prcoess particles: " << subSet.at(tid).size() << endl;
+		threadEndTime = omp_get_wtime();
+		totalTimes.at(tid) = threadEndTime - threadStartTime;
+		cout << "Thread: " << tid << " have work: " << threadEndTime - threadStartTime << " Prcoess particles: " << subSet.at(tid).size() << endl;
 
 	}  /* All threads join master thread and terminate */
 
@@ -125,12 +144,15 @@ int main()
 
 	
 	/* ending */
-	time(&endTime);
+	endTime = omp_get_wtime();
 
 	printToFile(&set, RESULTFILE);
-	timeSummary(startTime, endTime, RESULTFILE);
+	timeTable(&totalTimes, &parallelTimes, &soloTimes, RESULTFILE);
+	timeSummary(startTime, endTime, RESULTFILE, &totalTimes, &parallelTimes, &soloTimes);
+	
 
-	cout << "Execution time: " << endTime - startTime << endl;
+	timeSummaryToConsole(startTime, endTime, &totalTimes, &parallelTimes, &soloTimes);
+	timeTableToConsole(&totalTimes, &parallelTimes, &soloTimes);
 	cout << "Type any character to close this program "  << endl;
 	cin.get();
 

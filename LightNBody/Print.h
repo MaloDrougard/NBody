@@ -18,4 +18,14 @@ int initFile(const char * fileName, int numberParticles, int numberSlots, double
 
 int initFileBarnesHut(const char * fileName, int numThreads, int numberParticles, int numberSlots, double deltaTime, double accuracy);
 
-int timeSummary(time_t start, time_t end,  const char * fileName);
+int timeSummary(double start, double end, const char * fileName, vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes);
+
+int timeTable(vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes, const char * fileName);
+
+int timeTableToConsole(vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes);
+
+int timeSummaryToConsole(double start, double end, vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes);
+
+double mean(vector<double> * v);
+
+double sum(vector<double> * v);
