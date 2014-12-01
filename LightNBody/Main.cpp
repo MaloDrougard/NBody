@@ -9,7 +9,7 @@
 #include "NBodysFunction.h"
 #include "Generator.h"
 #include "Print.h"
-
+#include "TimeAnalyzer.h"
 
 using namespace std;
 
@@ -24,12 +24,12 @@ Area baseArea( -50, 50, -50 , 50);
 
 int main()
 {	
-	double startTime;
-	double endTime;
+	
 	vector<Particle>  set;
 	vector<Particle> * rest;
-	
+
 	Tree * root;
+	TimeAnalyzer analyzer;
 
 	/* get infos from user */
 	cout << "Hello Beatch!" << endl;
@@ -53,16 +53,10 @@ int main()
 	set = GenerateSet(GENERATORFILE, COUNTPARTICLE);
 	initFileBarnesHut(RESULTFILE, NUMTHREADS, set.size() , NUMSLOT, DELTATIME, ACCURACY);
 	printToFile(&set, RESULTFILE);
-			
+	analyzer.init(NUMTHREADS, NUMSLOT);
 	int count = 0;
 	 
-	/* core of the program */
-	startTime = omp_get_wtime();
-	cout << "Program start at: " << startTime << endl;
-	startTime = omp_get_wtime();
-
-
-
+	
 	/* preparing the parallel section */
 	int subSetSize = set.size() / NUMTHREADS;
 	vector<vector<Particle>> subSet;
@@ -75,68 +69,57 @@ int main()
 	vector<Particle> last(it, set.end()); //it's possible that the numthread is not a divisor of the set.size
 	subSet.push_back(last);
 
-	vector<double>  parallelTimes;
-	vector<double> soloTimes;
-	vector<double> totalTimes;
-	for (int i = 0; i < NUMTHREADS; ++i)
-	{
-		parallelTimes.push_back(0);
-		totalTimes.push_back(0);
-		soloTimes.push_back(0);
-	}
 
-	int tid;
-	double threadStartTime;
-	double threadEndTime;
-	double threadStartParaTime;
-	double threadEndParaTime;
-	double singleThreadStartTime;
-	double singleThreadEndTime;
+	/* core of the program */
 
-#pragma omp parallel private(tid, count, threadStartTime, threadEndTime) shared(set, root) num_threads(NUMTHREADS)
+	cout << "Program start: " << endl;
+
+	/* the private variable for the parallel section*/
+	int tid = 0;
+
+#pragma omp parallel private(tid, count, threadStartTime, threadEndTime) shared(set, root, analyzer) num_threads(NUMTHREADS)
 	{
 		tid = omp_get_thread_num();
 		cout << "Thread: " << tid << "  Start!" << endl;
 		count = 0;
-		threadStartTime = omp_get_wtime();
+		analyzer.totalTimes.at(tid)[0] = omp_get_wtime();
 
 		//Core of the software
 		while (count < NUMSLOT){
 #pragma omp single
 			{	
-				cout << "Thread " << tid << " generate the tree."  ;
-				singleThreadStartTime = omp_get_wtime();
+				cout << "Thread " << tid << " generate the tree. "  ;
+				analyzer.soloTimes.at(tid).at(count)[0] = omp_get_wtime();
 				root = GenerateTree(set, (Tree *)NULL, baseArea);
-				singleThreadEndTime = omp_get_wtime();
-				soloTimes.at(tid) = soloTimes.at(tid) + (singleThreadEndTime - singleThreadStartTime);
-				cout << "That take " << singleThreadEndTime - singleThreadStartTime << endl;
 			}// end of the single part
-			
-			threadStartParaTime = omp_get_wtime();
+
+#pragma omp barrier
+
+			analyzer.parallelTimes.at(tid).at(count)[0] = omp_get_wtime();
 
 			BarnesHutAttractions(&(subSet.at(tid)), root, ACCURACY);
 			NBodysTravel(&(subSet.at(tid)), DELTATIME);
 			++count;
 			
-			threadEndParaTime = omp_get_wtime();
-			parallelTimes.at(tid) = parallelTimes.at(tid) + (threadEndParaTime - threadStartParaTime);
-#pragma omp barrier // the thread have all update her part
+			analyzer.parallelTimes.at(tid).at(count)[1] = omp_get_wtime();
+			
+#pragma omp barrier // the thread weit here until all threads update his part
+
 #pragma omp single
 			{
-				cout << "Thread " << tid << " update the set.";
-				singleThreadStartTime = omp_get_wtime();
+				cout << "Thread " << tid << " update the set. ";
+				
 				set.clear();
 				for (int i = 0; i < NUMTHREADS; ++i) {
 					set.insert(set.end(), subSet.at(i).begin(), subSet.at(i).end());
 				}
-				singleThreadEndTime = omp_get_wtime();
-				soloTimes.at(tid) = soloTimes.at(tid) + (singleThreadEndTime - singleThreadStartTime);
-				cout << "That take " << singleThreadEndTime - singleThreadStartTime << endl;
+				
 			}
 		} 
-		threadEndTime = omp_get_wtime();
-		totalTimes.at(tid) = threadEndTime - threadStartTime;
-		cout << "Thread: " << tid << " have work: " << threadEndTime - threadStartTime << " Prcoess particles: " << subSet.at(tid).size() << endl;
+		
+		analyzer.totalTimes.at(tid)[1]= omp_get_wtime();
+	
+		cout << "Thread: " << tid << " have work: " << analyzer.getTotalTime(tid) << " Prcoess particles: " << subSet.at(tid).size() << endl;
 
 	}  /* All threads join master thread and terminate */
 
