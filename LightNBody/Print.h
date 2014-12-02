@@ -5,6 +5,7 @@
 #include <time.h>
 
 #include "Particle.h"
+#include "TimeAnalyzer.h"
 
 /*
 * This is print a Set of particle to a txt file using the following format:
@@ -20,12 +21,15 @@ int initFileBarnesHut(const char * fileName, int numThreads, int numberParticles
 
 int timeSummary(double start, double end, const char * fileName, vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes);
 
-int timeTable(vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes, const char * fileName);
 
-int timeTableToConsole(vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes);
+int timeTable(TimeAnalyzer * analyzer, const char * fileName);
+
+int timeTableToConsole(TimeAnalyzer * analyzer);
+
+int timeTableToStream(TimeAnalyzer * analyzer, ostream &stream);
+
+int rawTableToStream(TimeAnalyzer * analyzer, ostream &stream);
+
+int rawTableToFile(TimeAnalyzer * analyzer, const char * fileName);
 
 int timeSummaryToConsole(double start, double end, vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes);
-
-double mean(vector<double> * v);
-
-double sum(vector<double> * v);

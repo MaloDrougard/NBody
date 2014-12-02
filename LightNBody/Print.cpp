@@ -1,4 +1,5 @@
 
+#include <iomanip>
 #include "Print.h"
 
 
@@ -53,31 +54,64 @@ int initFileBarnesHut(const char * fileName, int numThreads, int numberParticles
 	return 1;
 }
 
-int timeTable(vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes, const char * fileName)
-{
-	ofstream ofs;
-	ofs.open(fileName, std::ofstream::app);
-	ofs << "TIME TABLE:" << endl;
-	ofs << "THREAD " << "TOTALTIME " << "PARALLELTIME " << "SOLOTIME " << endl;
-	for (int i = 0; i < totalTimes->size(); ++i)
-	{
-		ofs << i << " " << totalTimes->at(i) << " " << paraTimes->at(i) << " " << soloTimes->at(i) << endl;
+
+
+int timeTableToStream(TimeAnalyzer * analyzer, ostream  &stream){
+	stream << "TABLE: PARALLELTIME FOR EACH SLOT" << endl;
+	stream << setw(6) << "THREAD ";
+
+	for (int i = 0; i < analyzer->numSlots; ++i){
+		stream << setw(6) << "S" << i;
+	}
+	stream << endl;
+
+	for (int i = 0; i < analyzer->numThreads; ++i){
+		stream << setw(6) << i;
+		for (int j = 0; j < analyzer->numSlots; ++j) {
+			stream << fixed << setw(8) << setprecision(5) << analyzer->getSlotParallelTime(i, j);
+		}
+		stream << endl;
 	}
 
-	ofs.close();
+	stream << setw(6) << "means";
+	for (int i = 0; i < analyzer->numSlots; ++i){
+		stream << setw(8) << setprecision(5) << analyzer->getSlotMeanParallelTime(i);
+	}
+	stream << endl;
+
+	stream << setw(6) << "max";
+	for (int i = 0; i < analyzer->numSlots; ++i){
+		stream << setw(8) << setprecision(5) << analyzer->getSlotMaxParallelTime(i);
+	}
+	stream << endl;
+
+	stream << setw(6) << "min";
+	for (int i = 0; i < analyzer->numSlots; ++i){
+		stream << setw(8) << setprecision(5) << analyzer->getSlotMinParallelTime(i);
+	}
+	stream << endl;
 
 	return 1;
 }
 
-int timeTableToConsole(vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes)
-{
-	cout << "TIME TABLE:" << endl;
-	cout << "THREAD " << "TOTALTIME " << "PARALLELTIME " << "SOLOTIME " << endl;
-	for (int i = 0; i < totalTimes->size(); ++i)
-	{
-		cout << i << " " << totalTimes->at(i) << " " << paraTimes->at(i) << " " << soloTimes->at(i) << endl;
-	}
+int timeTableToConsole(TimeAnalyzer * analyzer){
+	
+	return timeTableToStream(analyzer, std::cout);
+
 }
+
+int timeTable(TimeAnalyzer * analyzer, const char * fileName)
+{
+	ofstream ofs;
+	ofs.open(fileName, std::ofstream::app);
+	
+	int r = timeTableToStream(analyzer, ofs);
+
+	ofs.close();
+
+	return r;
+}
+
 
 
 int timeSummary(double start, double end, const char * fileName, vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes) {
@@ -86,10 +120,10 @@ int timeSummary(double start, double end, const char * fileName, vector<double> 
 	ofs.open(fileName, std::ofstream::app);
 
 	ofs << "TOTAL EXECUTION TIME: " << end - start << endl;
-	ofs << "EXECUTION TIME MEANS OF EACH THREAD: " << mean(totalTimes) << endl;
-	ofs << "PARALLEL MEAN EXECUTION TIME: " << mean(paraTimes) << endl;
-	ofs << "TOTAL OF SEQUANTIAL EXECUTION TIME: " << sum(soloTimes) << endl;
-	double dispearTime = mean(totalTimes) - mean(paraTimes) - sum(soloTimes);
+	ofs << "EXECUTION TIME MEANS OF EACH THREAD: "  << endl;
+	ofs << "PARALLEL MEAN EXECUTION TIME: "<< endl;
+	ofs << "TOTAL OF SEQUANTIAL EXECUTION TIME: "  << endl;
+	double dispearTime = 0;
 	ofs << "DISPEAR TIME: " << dispearTime << endl;
 
 	ofs.close();
@@ -100,36 +134,138 @@ int timeSummary(double start, double end, const char * fileName, vector<double> 
 
 
 int timeSummaryToConsole(double start, double end, vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes) {
-		
-	cout << "TOTAL EXECUTION TIME: " << end - start << endl;
-	cout << "EXECUTION TIME MEANS OF EACH THREAD: " << mean(totalTimes) << endl;
-	cout << "PARALLEL MEAN EXECUTION TIME: " << mean(paraTimes) << endl;
-	cout << "TOTAL OF SEQUANTIAL EXECUTION TIME: " << sum(soloTimes) << endl;
-	double dispearTime = mean(totalTimes) - mean(paraTimes) - sum(soloTimes);
-	cout << "DISPEAR TIME: " << dispearTime << endl;
 	
 	return 1;
 }
 
-double mean(vector<double> * v)
-{	
-	double r = 0;
-	for (int i = 0; i < v->size(); ++i)
-	{
-		r = r + v->at(i);
-	}
-	r = r / v->size();
+int rawTableToFile(TimeAnalyzer * analyzer, const char * fileName){
+	ofstream ofs;
+	ofs.open(fileName, std::ofstream::app);
+	int r = rawTableToStream(analyzer, ofs);
+	ofs.close();
+
 	return r;
+
 }
 
-double sum(vector<double> * v)
-{
-	double r = 0;
-	for (int i = 0; i < v->size(); ++i)
-	{
-		r = r + v->at(i);
+int rawTableToStream(TimeAnalyzer * analyzer, ostream &stream){
+	
+	stream << fixed;
+	stream << setprecision(16);
+	stream << "TOTALTIME_TABLE_START:" << endl;
+	stream <<  "THREAD START" << endl;;
+	for (int i = 0; i < analyzer->totalTimes.size(); ++i){
+		stream << i << " " << analyzer->totalTimes.at(i).start << endl;
 	}
-	return r;
+
+	stream << endl;
+	
+	stream << "TOTALTIME_TABLE_END:" << endl;
+	stream << "THREAD END" << endl;;
+	for (int i = 0; i < analyzer->totalTimes.size(); ++i){
+		stream << i << " " << analyzer->totalTimes.at(i).end << endl;
+	}
+
+	stream << endl; 
+
+	stream << "PARALLELTIME_START:" << endl;
+	stream << "THREAD ";
+	for (int i = 0; i < analyzer->numSlots; ++i){
+		stream << "S" << i << " ";
+	}
+	stream << endl;
+	for (int i = 0; i < analyzer->numThreads; ++i){
+		stream << i << " ";
+		for (int j = 0; j < analyzer->numSlots; ++j){
+			stream << analyzer->parallelTimes.at(i).at(j).start << " ";
+		}
+		stream << endl;
+	}
+	
+	stream << endl;
+
+	stream << "PARALLELTIME_END:" << endl;
+	stream << "THREAD ";
+	for (int i = 0; i < analyzer->numSlots; ++i){
+		stream << "S" << i << " ";
+	}
+	stream << endl;
+	for (int i = 0; i < analyzer->numThreads; ++i){
+		stream << i << " ";
+		for (int j = 0; j < analyzer->numSlots; ++j){
+			stream << analyzer->parallelTimes.at(i).at(j).end << " ";
+		}
+		stream << endl;
+	}
+
+	stream << endl;
+
+	stream << "SOLOTIME_START_PART1:" << endl;
+	stream << "THREAD ";
+	for (int i = 0; i < analyzer->numSlots; ++i){
+		stream << "S" << i << " ";
+	}
+	stream << endl;
+	for (int i = 0; i < analyzer->numThreads; ++i){
+		stream << i << " ";
+		for (int j = 0; j < analyzer->numSlots; ++j){
+			stream << analyzer->soloTimes.at(i).at(j).at(0).start << " ";
+		}
+		stream << endl;
+	}
+
+	stream << endl;
+
+	stream << "SOLOTIME_END_PART1:" << endl;
+	stream << "THREAD ";
+	for (int i = 0; i < analyzer->numSlots; ++i){
+		stream << "S" << i << " ";
+	}
+	stream << endl;
+	for (int i = 0; i < analyzer->numThreads; ++i){
+		stream << i << " ";
+		for (int j = 0; j < analyzer->numSlots; ++j){
+			stream << analyzer->soloTimes.at(i).at(j).at(0).end << " ";
+		}
+		stream << endl;
+	}
+
+	stream << endl;
+
+	stream << "SOLOTIME_START_PART2:" << endl;
+	stream << "THREAD ";
+	for (int i = 0; i < analyzer->numSlots; ++i){
+		stream << "S" << i << " ";
+	}
+	stream << endl;
+	for (int i = 0; i < analyzer->numThreads; ++i){
+		stream << i << " ";
+		for (int j = 0; j < analyzer->numSlots; ++j){
+			stream << analyzer->soloTimes.at(i).at(j).at(1).start << " ";
+		}
+		stream << endl;
+	}
+
+	stream << endl;
+
+	stream << "SOLOTIME_END_PART2:" << endl;
+	stream << "THREAD ";
+	for (int i = 0; i < analyzer->numSlots; ++i){
+		stream << "S" << i << " ";
+	}
+	stream << endl;
+	for (int i = 0; i < analyzer->numThreads; ++i){
+		stream << i << " ";
+		for (int j = 0; j < analyzer->numSlots; ++j){
+			stream << analyzer->soloTimes.at(i).at(j).at(1).end << " ";
+		}
+		stream << endl;
+	}
+
+	stream << endl;
+
+
+
 }
 
 

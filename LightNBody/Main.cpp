@@ -16,7 +16,7 @@ using namespace std;
 char GENERATORFILE[100]  = "tab128";
 char RESULTFILE[100]  = "result.txt";
 int COUNTPARTICLE = 100000;
-int NUMSLOT = 20;
+int NUMSLOT = 7;
 double DELTATIME = 1;
 double ACCURACY = 0.5;
 int NUMTHREADS = 32;	
@@ -77,47 +77,53 @@ int main()
 	/* the private variable for the parallel section*/
 	int tid = 0;
 
-#pragma omp parallel private(tid, count, threadStartTime, threadEndTime) shared(set, root, analyzer) num_threads(NUMTHREADS)
+#pragma omp parallel private(tid, count) shared(set, root, analyzer) num_threads(NUMTHREADS)
 	{
 		tid = omp_get_thread_num();
 		cout << "Thread: " << tid << "  Start!" << endl;
 		count = 0;
-		analyzer.totalTimes.at(tid)[0] = omp_get_wtime();
+		analyzer.totalTimes.at(tid).start = omp_get_wtime();
 
 		//Core of the software
 		while (count < NUMSLOT){
 #pragma omp single
 			{	
-				cout << "Thread " << tid << " generate the tree. "  ;
-				analyzer.soloTimes.at(tid).at(count)[0] = omp_get_wtime();
+				cout << "Thread " << tid << " generate the tree. " << endl;
+				analyzer.soloTimes.at(tid).at(count).at(0).start = omp_get_wtime();
+
 				root = GenerateTree(set, (Tree *)NULL, baseArea);
+				
+				analyzer.soloTimes.at(tid).at(count).at(0).end = omp_get_wtime();
 			}// end of the single part
 
 #pragma omp barrier
 
-			analyzer.parallelTimes.at(tid).at(count)[0] = omp_get_wtime();
+			analyzer.parallelTimes.at(tid).at(count).start = omp_get_wtime();
 
 			BarnesHutAttractions(&(subSet.at(tid)), root, ACCURACY);
 			NBodysTravel(&(subSet.at(tid)), DELTATIME);
-			++count;
 			
-			analyzer.parallelTimes.at(tid).at(count)[1] = omp_get_wtime();
-			
+			analyzer.parallelTimes.at(tid).at(count).end = omp_get_wtime();
+						
 #pragma omp barrier // the thread weit here until all threads update his part
-
+			
 #pragma omp single
 			{
-				cout << "Thread " << tid << " update the set. ";
-				
+				cout << "Thread " << tid << " update the set. " << endl;
+				analyzer.soloTimes.at(tid).at(count).at(1).start = omp_get_wtime();
+
 				set.clear();
 				for (int i = 0; i < NUMTHREADS; ++i) {
 					set.insert(set.end(), subSet.at(i).begin(), subSet.at(i).end());
 				}
+				analyzer.soloTimes.at(tid).at(count).at(1).end = omp_get_wtime();
 				
 			}
+
+			++count;
 		} 
 		
-		analyzer.totalTimes.at(tid)[1]= omp_get_wtime();
+		analyzer.totalTimes.at(tid).end = omp_get_wtime();
 	
 		cout << "Thread: " << tid << " have work: " << analyzer.getTotalTime(tid) << " Prcoess particles: " << subSet.at(tid).size() << endl;
 
@@ -127,15 +133,11 @@ int main()
 
 	
 	/* ending */
-	endTime = omp_get_wtime();
-
-	printToFile(&set, RESULTFILE);
-	timeTable(&totalTimes, &parallelTimes, &soloTimes, RESULTFILE);
-	timeSummary(startTime, endTime, RESULTFILE, &totalTimes, &parallelTimes, &soloTimes);
 	
-
-	timeSummaryToConsole(startTime, endTime, &totalTimes, &parallelTimes, &soloTimes);
-	timeTableToConsole(&totalTimes, &parallelTimes, &soloTimes);
+	printToFile(&set, RESULTFILE);
+	timeTable(&analyzer, RESULTFILE);
+	timeTableToConsole(&analyzer);
+	rawTableToFile(&analyzer, RESULTFILE);
 	cout << "Type any character to close this program "  << endl;
 	cin.get();
 
