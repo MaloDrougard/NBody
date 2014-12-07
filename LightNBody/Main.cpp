@@ -46,11 +46,11 @@ int main()
 		
 	while (count < NUMSLOT){
 
-		NBodysAttraction(&set);  
-		NBodysTravel(&set, 1);
+		//NBodysAttraction(&set);  
+		//NBodysTravel(&set, 1);
 
-		//FakeAccessAttraction(&set); 
-		//FakeAccessTravel(&set); 
+		FakeAccessAttraction(&set); 
+		FakeAccessTravel(&set); 
 		++count;
 	}
 
