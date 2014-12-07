@@ -43,6 +43,12 @@ void Particle::calculateNewPosition(double t)
 	position[1] = position[1] + velocity[1] * t + 0.5 * acceleration[1] * t * t;
 }
 
+void Particle::calculateNewVelocity(double t)
+{
+	velocity[0] = velocity[0] + acceleration[0] * t;
+	velocity[1] = velocity[1] + acceleration[1] * t;
+}
+
 void Particle::setAcceleration(vector<double>  * a)
 {
 	acceleration[0] = a->at(0);
@@ -65,19 +71,16 @@ double myDistance(Particle * p1, Particle * p2)
 {
 	return sqrt(squarDistance(p1, p2));
 }
-
-vector<double> unitVector(Particle * p1, Particle * p2)
+void unitVector(Particle * p1, Particle * p2, vector<double> * unit)
 {
-	vector<double> u ;
+	unit->clear() ;
 	double d = myDistance(p1, p2);
-
-
+	
 	for (unsigned int i = 0; i < p1->position.size(); ++i){
-		u.push_back(p2->position.at(i) - p1->position.at(i));
-		u.at(i) = u.at(i) / d;
+		unit->push_back(p2->position.at(i) - p1->position.at(i));
+		unit->at(i) = unit->at(i) / d;
 	}
 
-	return u;
 }
 
 

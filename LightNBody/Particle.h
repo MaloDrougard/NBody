@@ -22,6 +22,7 @@ public:
 
 	// calculate the new position after time t
 	void calculateNewPosition(double t); // in sec
+	void calculateNewVelocity(double t);
 	void setAcceleration(vector <double> * a);
 	void setAccelerationByForce(vector<double> * f);
 
@@ -34,5 +35,5 @@ double myDistance(Particle * p1, Particle * p2);
 
 // return unit vector that have the direction of the line between p1 p2
 // the sens is from p1 to p2
- vector<double> unitVector(Particle * p1, Particle * p2); 
+void unitVector(Particle * p1, Particle * p2, vector<double> * unit);
 

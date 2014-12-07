@@ -14,5 +14,6 @@ int FakeNBodysAttraction(int n); // do the same number of operation as NbodysAtt
 int FakeNBodysTravel(int n);
 void FakeAccessTravel(std::vector<Particle> * set);
 void FakeAccessAttraction(vector<Particle> *set);
+int OneCycle();
 
 const double G = 1; // 0.0000000000667259;

@@ -13,7 +13,7 @@
 
 using namespace std;
 
-char GENERATORFILE[100]  = "tab128";
+char GENERATORFILE[100]  = "tab1024";
 char RESULTFILE[100]  = "result.txt";
 int COUNTPARTICLE = 100000;
 int NUMSLOT = 20;
@@ -45,8 +45,12 @@ int main()
 	time(&startTime);
 		
 	while (count < NUMSLOT){
-		FakeAccessAttraction(&set);
-		FakeAccessTravel(&set);
+
+		NBodysAttraction(&set);  
+		NBodysTravel(&set, 1);
+
+		//FakeAccessAttraction(&set); 
+		//FakeAccessTravel(&set); 
 		++count;
 	}
 

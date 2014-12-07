@@ -6,17 +6,17 @@
 #include <math.h> 
 
 using namespace std;
-int OPPERCYCLE = 10000;
+int OPPERCYCLE = 1;
 int NBodysAttraction(std::vector<Particle> * particlesSet)
 {
 	
 	vector<Particle>::iterator it = particlesSet->begin();
 	vector<Particle>::iterator innerIt = particlesSet->begin();
 	
+
+	//loop variables
 	double tempAttractiveForce = 0;
 	vector<double> tempRelatedVector;
-	
-	//loop variables
 	vector<double> temp;
 	double fx;
 	double fy;
@@ -32,7 +32,7 @@ int NBodysAttraction(std::vector<Particle> * particlesSet)
 		{
 			if (innerIt != it) // to avoid the selfy
 			{	
-				tempRelatedVector = unitVector(&(*it), &(*innerIt));
+				unitVector(&(*it), &(*innerIt), &tempRelatedVector);
 				tempAttractiveForce = ((G * it->mass * innerIt->mass)) / squarDistance(&(*it), &(*innerIt));
 				fx = fx + tempAttractiveForce * tempRelatedVector.at(0);
 				fy = fy + tempAttractiveForce * tempRelatedVector.at(1);
@@ -69,10 +69,10 @@ void FakeAccessAttraction(vector<Particle> *set)
 		tmpP.clear();
 		tmpV.clear();
 
+		innerIt = set->begin();
 
 		while (innerIt != set->end()) 
 			{
-
 			tmpA = it->acceleration;
 			tmpV = it->velocity;
 			tmpP = it->position;
@@ -91,11 +91,7 @@ void FakeAccessAttraction(vector<Particle> *set)
 						tmpP.at(0) = tmpP.at(0) + innerIt->position.at(0) / 16;
 						tmpP.at(1) = tmpP.at(1) + innerIt->position.at(1) / 16;
 						
-						p = pow(3.0, 2) + pow(19.99, 4);
-						sqrt(p);
-						
-						
-					
+						//OneCycle();
 					}
 					
 				}
@@ -115,30 +111,23 @@ void FakeAccessAttraction(vector<Particle> *set)
 }
 
 
-int FakeNBodysAttraction(int n)
+int OneCycle()
 {
 	double p = 0;
 	int f = 0;
-	for (int i = 0; i < n* (n - 1); ++i)
-	{
-		// cost of the unit vector
-		p = pow(3.0, 2) + pow(19.99, 4);
-		sqrt(p);
-		12 + 23 + 12 + 67;
-		4 / 392; 3 / 123;
-		//end cost of unit vector
-
-		f = (G * 3 * 3) / pow(3.0, 2) + pow(19.99, 4);
-		f = f + f * 3;
-		f = f + f * 0.6;
-
-		// cost of set Accelaration
-		3 / 7;
-		34 / 8;
-	}
-
-
-	return 0;
+	// cost of the unit vector
+	p = pow(3.0, 2) + pow(19.99, 4);
+	sqrt(p);
+	12 + 23 + 12 + 67;
+	4 / 392; 3 / 123;
+	//end cost of unit vector
+	f = (G * 3 * 3) / pow(3.0, 2) + pow(19.99, 4);
+	f = f + f * 3;
+	f = f + f * 0.6;
+	// cost of set Accelaration
+	3 / 7;
+	34 / 8;
+	return p;
 }
 
 int NBodysTravel(std::vector<Particle> * particlesSet, double time)
@@ -146,6 +135,7 @@ int NBodysTravel(std::vector<Particle> * particlesSet, double time)
 
 	for (int i = 0; i < (*particlesSet).size(); ++i ){
 		(*particlesSet).at(i).calculateNewPosition(time);
+		(*particlesSet).at(i).calculateNewVelocity(time);
 
 	}
 
