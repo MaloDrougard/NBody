@@ -264,6 +264,8 @@ int rawTableToStream(TimeAnalyzer * analyzer, ostream &stream){
 
 	stream << endl;
 
+	return 1;
+
 
 
 }

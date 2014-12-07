@@ -12,6 +12,8 @@
 int NBodysTravel(std::vector<Particle> * particlesSet, double time);
 int BarnesHutAttractions(std::vector<Particle> * set, Tree *  look, double accurancy);
 vector<double> calculateAttraction(Particle * p, Tree * look, double accurancy); 
+double calculateAttractionX(Particle *  p, Tree * look, double accurancy, vector<double> * directionUnitTmp);
+double calculateAttractionY(Particle *  p, Tree * look, double accurancy, vector<double> * directionUnitTmp);
 
 
 const double G = 1; // 0.0000000000667259;

@@ -13,14 +13,17 @@
 
 using namespace std;
 
-char GENERATORFILE[100]  = "tab128";
+char GENERATORFILE[100]  = "tab1024";
 char RESULTFILE[100]  = "result.txt";
 int COUNTPARTICLE = 100000;
-int NUMSLOT = 7;
+int NUMSLOT = 1;
 double DELTATIME = 1;
 double ACCURACY = 0.5;
-int NUMTHREADS = 32;	
+int NUMTHREADS = 4;	
+bool INPUT = true;
 Area baseArea( -50, 50, -50 , 50); 
+
+void getInput(); 
 
 int main()
 {	
@@ -31,21 +34,9 @@ int main()
 	Tree * root;
 	TimeAnalyzer analyzer;
 
-	/* get infos from user */
-	cout << "Hello Beatch!" << endl;
-	cout << "Enter the file name of the input file: " << endl;
-	gets(GENERATORFILE);
-
-	cout << "Enter the file name of the output file: " << endl;
-	gets(RESULTFILE);
-
-	cout << "Enter the accuracy: 0 is the best, 1 the least " << endl;
-	cin >> ACCURACY;
-	cin.ignore();
-	
-	cout << "Enter the number of threads:" << endl;
-	cin >> NUMTHREADS;
-	cin.ignore();
+	if (INPUT) {
+		getInput();
+	}
 	
 
 	/* initialization */
@@ -136,11 +127,33 @@ int main()
 	
 	printToFile(&set, RESULTFILE);
 	timeTable(&analyzer, RESULTFILE);
-	timeTableToConsole(&analyzer);
 	rawTableToFile(&analyzer, RESULTFILE);
-	cout << "Type any character to close this program "  << endl;
-	cin.get();
+
+	if (INPUT){
+		cout << "Type any character to close this program " << endl;
+		cin.get();
+	}
+	
 
 	return 0;
+}
+
+void getInput(){
+	/* get infos from user */
+	cout << "Hello Beatch!" << endl;
+	cout << "Enter the file name of the input file: " << endl;
+	gets(GENERATORFILE);
+
+	cout << "Enter the file name of the output file: " << endl;
+	gets(RESULTFILE);
+
+	cout << "Enter the accuracy: 0 is the best, 1 the least " << endl;
+	cin >> ACCURACY;
+	cin.ignore();
+
+	cout << "Enter the number of threads:" << endl;
+	cin >> NUMTHREADS;
+	cin.ignore();
+
 }
 

@@ -29,8 +29,8 @@ public:
 		children.push_back(c4);
 	}
 
-	vector<Tree * > getChildren() {	return children;}
-
+	vector<Tree * > getChildren() { return children; };
+	vector<double> * getMassCenter() { return &massCenter; };
 
 
 	virtual void print();

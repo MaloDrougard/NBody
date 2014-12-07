@@ -43,10 +43,10 @@ void Particle::calculateNewPosition(double t)
 	position[1] = position[1] + velocity[1] * t + 0.5 * acceleration[1] * t * t;
 }
 
-void Particle::updateVelocity(double t)
+void Particle::calculateNewVelocity(double t)
 {
-	velocity.at(0) = acceleration.at(0) * t + velocity.at(0);
-	velocity.at(1) = acceleration.at(1) * t + velocity.at(1);
+	velocity[0] = velocity[0] + acceleration[0] * t;
+	velocity[1] = velocity[1] + acceleration[1] * t;
 }
 
 void Particle::setAcceleration(vector<double>  * a)
@@ -72,31 +72,32 @@ double myDistance(Particle * p1, Particle * p2)
 	return sqrt(squarDistance(p1, p2));
 }
 
-vector<double> unitVector(Particle * p1, Particle * p2)
+void unitVector(Particle * p1, Particle * p2, vector<double> * unit)
 {
-	vector<double> u ;
+	unit->clear();
 	double d = myDistance(p1, p2);
 
-
 	for (unsigned int i = 0; i < p1->position.size(); ++i){
-		u.push_back(p2->position.at(i) - p1->position.at(i));
-		u.at(i) = u.at(i) / d;
+		unit->push_back(p2->position.at(i) - p1->position.at(i));
+		unit->at(i) = unit->at(i) / d;
 	}
 
-	return u;
 }
 
-vector<double> Particle::unitVectorToPoint(vector<double> * point)
-{
+void Particle::unitVectorToPoint(vector<double> * point, vector<double> * unit)
+{	
+	unit->clear();
+
 	double x = point->at(0) - position.at(0);
 	double y = point->at(1) - position.at(1);
 	double norme = distanceToPoint(point);
 
-	vector<double> ret(2);
-	ret.at(0) = x / norme;
-	ret.at(1) = y / norme;
-	return ret;
+	unit->push_back(x / norme);
+	unit->push_back( y / norme);
+
 }
+
+
 
 
 double Particle::distanceToPoint(vector<double> * point)
