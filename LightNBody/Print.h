@@ -33,3 +33,5 @@ int rawTableToStream(TimeAnalyzer * analyzer, ostream &stream);
 int rawTableToFile(TimeAnalyzer * analyzer, const char * fileName);
 
 int timeSummaryToConsole(double start, double end, vector<double> * totalTimes, vector<double> * paraTimes, vector<double> * soloTimes);
+
+int restSize(int size, const char * fileName);

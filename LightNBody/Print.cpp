@@ -31,7 +31,7 @@ int initFile(const char * fileName, int numThreads, int numberParticles, int num
 	ofstream ofs;
 	ofs.open(fileName, std::ofstream::out);
 	ofs << "METHOD: Basic ";
-	ofs << "NUMBER_OF_THREADS: " << numThreads << endl;
+	ofs << "NUMBER_OF_THREADS: " << numThreads << " ";
 	ofs << "NUMBER_OF_PARTICLE: " << numberParticles << "  ";
 	ofs << "NUMBER_OF_SLOT: " << numberSlots << "  ";
 	ofs << "DELTA_TIME: " << deltaTime << endl;
@@ -46,7 +46,7 @@ int initFileBarnesHut(const char * fileName, int numThreads, int numberParticles
 	ofstream ofs;
 	ofs.open(fileName, std::ofstream::out);
 	ofs << "METHOD: BarnesHutMultiThreads ";
-	ofs << "NUMBER_OF_THREADS: " << numThreads << endl;
+	ofs << "NUMBER_OF_THREADS: " << numThreads << " ";
 	ofs << "NUMBER_OF_PARTICLE: " << numberParticles << "  ";
 	ofs << "NUMBER_OF_SLOT: " << numberSlots << "  ";
 	ofs << "DELTA_TIME: " << deltaTime << " " ;
@@ -152,6 +152,9 @@ int rawTableToFile(TimeAnalyzer * analyzer, const char * fileName){
 
 int rawTableToStream(TimeAnalyzer * analyzer, ostream &stream){
 	
+	stream << endl;
+	stream << "ANALYZE:" << endl;
+
 	stream << fixed;
 	stream << setprecision(16);
 	stream << "TOTALTIME_TABLE_START:" << endl;
@@ -268,10 +271,18 @@ int rawTableToStream(TimeAnalyzer * analyzer, ostream &stream){
 
 	return 1;
 
-
-
 }
 
+int restSize(int size, const char * fileName)
+{
+	ofstream ofs;
+	ofs.open(fileName, std::ofstream::app);
+
+	ofs << "PARTICLE_OUT_OF_AREA: " << size;
+
+	ofs.close();
+	return 1;
+}
 
 
 

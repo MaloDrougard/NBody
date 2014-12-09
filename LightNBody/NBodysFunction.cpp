@@ -130,10 +130,10 @@ int BarnesHutAttractions(std::vector<Particle> * set, Tree *  look, double accur
 
 	while (it != set->end())
 	{
-		//force.clear();
-		//force.push_back( calculateAttractionX( &(*it),  look, accurancy, &directionUnitTmp )); // set fx
-		//force.push_back(calculateAttractionY(&(*it), look, accurancy, &directionUnitTmp)); // set fy
-		force = calculateAttraction(&(*it), look, accurancy);
+		force.clear();
+		force.push_back( calculateAttractionX( &(*it),  look, accurancy, &directionUnitTmp )); // set fx
+		force.push_back(calculateAttractionY(&(*it), look, accurancy, &directionUnitTmp)); // set fy
+		//force = calculateAttraction(&(*it), look, accurancy);
 
 		it->setAccelerationByForce(&force);
 		++it;
