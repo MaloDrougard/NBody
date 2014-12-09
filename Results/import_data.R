@@ -4,7 +4,8 @@ name = "result.txt"
 text = readLines(name)
 file_header = read.table(text = text[1])
 num_threads = file_header[1,4]
-
+num_slots = file_header[1,8]
+  
 #table name:
 total_start_n = "TOTALTIME_TABLE_START"
 total_end_n = "TOTALTIME_TABLE_END"
@@ -30,6 +31,43 @@ total_e = getTable(total_end_n)
 para_s = getTable(para_start_n)
 para_e = getTable(para_end_n)
 solo_part1_s = getTable(solo_part1_start_n)
-solo_part1_e= getTable(solo_part1_end_n)
-solo_part2_s = getTable(solo_part2_start_n)
+solo_part1_e = getTable(solo_part1_end_n)
+solo_part2_s =getTable(solo_part2_start_n)
 solo_part2_e = getTable(solo_part2_end_n)
+
+
+################ GET THE EFFECTIVE TIME #######################
+para = sapply(para_e, max) - sapply(para_s, min)
+# we take allways the max because only one thread is active during a part
+solo = (sapply(solo_part1_e, max) - sapply(solo_part1_s, max)) +
+              (sapply(solo_part2_e, max) - sapply(solo_part2_s, max) )
+
+################# TOTAL TIME ##################################
+total_t = max(total_e) -  min(total_s)
+mean_time_per_slot = total_t / num_slots
+time_slots = para + solo
+sum = sum(para) + sum(solo)
+
+
+################### FRACTIONS #################################
+f_solo = solo / (solo + para) 
+f_mean_solo =  mean(f_solo)
+
+################# DIFFERENCE BETWEEN THE THREADS ##############
+dif_para = sapply( (para_e - para_s) , max ) - sapply( (para_e - para_s), min)
+dif_mean = mean(dif_para)
+
+#################### SUMMARY ##################################
+write("SUMMARY\n", name, append = TRUE)
+
+
+
+
+#################### END AND CLEAR ############################
+
+
+
+
+
+
+
