@@ -62,7 +62,7 @@ int NBodysTravel(std::vector<Particle> * particlesSet, double time)
 {
 
 	for (int i = 0; i < (*particlesSet).size(); ++i){
-		(*particlesSet).at(i).calculateNewPosition(time);
+			(*particlesSet).at(i).calculateNewPosition(time);
 		(*particlesSet).at(i).calculateNewVelocity(time);
 
 	}

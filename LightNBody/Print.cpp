@@ -1,6 +1,7 @@
 
 #include <iomanip>
 #include "Print.h"
+#include <time.h>
 
 
 
@@ -28,6 +29,7 @@ int printToFile(vector<Particle> * pSet, const char * fileName) {
 
 int initFile(const char * fileName, int numThreads, int numberParticles, int numberSlots, double deltaTime){
 
+	time_t t;
 	ofstream ofs;
 	ofs.open(fileName, std::ofstream::out);
 	ofs << "METHOD: Basic ";
@@ -35,6 +37,8 @@ int initFile(const char * fileName, int numThreads, int numberParticles, int num
 	ofs << "NUMBER_OF_PARTICLE: " << numberParticles << "  ";
 	ofs << "NUMBER_OF_SLOT: " << numberSlots << "  ";
 	ofs << "DELTA_TIME: " << deltaTime << endl;
+	time(&t);
+	ofs << "DATE:" << ctime(&t) << endl;
 	ofs.close();
 
 	return 1;
@@ -42,7 +46,7 @@ int initFile(const char * fileName, int numThreads, int numberParticles, int num
 
 
 int initFileBarnesHut(const char * fileName, int numThreads, int numberParticles, int numberSlots, double deltaTime, double accuracy){
-
+	time_t t;
 	ofstream ofs;
 	ofs.open(fileName, std::ofstream::out);
 	ofs << "METHOD: BarnesHutMultiThreads ";
@@ -51,6 +55,9 @@ int initFileBarnesHut(const char * fileName, int numThreads, int numberParticles
 	ofs << "NUMBER_OF_SLOT: " << numberSlots << "  ";
 	ofs << "DELTA_TIME: " << deltaTime << " " ;
 	ofs << "ACCURACY: " << accuracy << endl;
+	time(&t);
+	ofs << "DATE:" << ctime(&t) << endl;
+
 	ofs.close();
 
 	return 1;
@@ -278,7 +285,7 @@ int restSize(int size, const char * fileName)
 	ofstream ofs;
 	ofs.open(fileName, std::ofstream::app);
 
-	ofs << "PARTICLE_OUT_OF_AREA: " << size;
+	ofs << "PARTICLE_OUT_OF_AREA: " << size << endl;
 
 	ofs.close();
 	return 1;
