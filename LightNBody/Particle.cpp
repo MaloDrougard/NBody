@@ -54,7 +54,7 @@ void Particle::setAcceleration(vector<double>  * a)
 {
 	acceleration[0] = a->at(0);
 	acceleration[1] = a->at(1);
-
+}
 
 void Particle::setAccelerationByForce(vector<double> * f)
 {
