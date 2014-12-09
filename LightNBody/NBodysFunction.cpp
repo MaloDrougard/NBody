@@ -8,6 +8,7 @@
 using namespace std;
 int OPPERCYCLE = 1;
 
+
 int NBodysAttraction(std::vector<Particle> * particlesSet)
 {
 	
@@ -55,6 +56,7 @@ int NBodysAttraction(std::vector<Particle> * particlesSet)
 }
 
 
+
 int NBodysTravel(std::vector<Particle> * particlesSet, double time)
 {
 
@@ -66,6 +68,53 @@ int NBodysTravel(std::vector<Particle> * particlesSet, double time)
 
 	return 0;
 }
+
+/*
+* THE FOLLOWING METHOD CAN BE USE IN A PARALLEL SECTION
+*/
+
+
+int NBodysAttraction(std::vector<Particle> * particlesSetRead, std::vector<Particle> * particlesCalculus)
+{
+	
+	vector<Particle>::iterator it = particlesCalculus->begin();
+	vector<Particle>::iterator innerIt = particlesSetRead->begin();
+	
+	double tempAttractiveForce = 0;
+	vector<double> tempRelatedVector;
+	
+
+	while (it != particlesCalculus->end())
+	{
+		innerIt = particlesSetRead->begin();
+		double fx = 0;
+		double fy = 0;
+
+		while (innerIt != particlesSetRead->end()) 
+		{
+			if (innerIt->id != it->id) // to avoid the selfy
+			{	
+				tempRelatedVector = unitVector(&(*it), &(*innerIt));
+				tempAttractiveForce = ((G * it->mass * (*innerIt).mass)) / squarDistance(&(*it), &(*innerIt));
+				fx = fx + tempAttractiveForce * tempRelatedVector.at(0);
+				fy = fy + tempAttractiveForce * tempRelatedVector.at(1);
+
+			}
+			++innerIt;
+		};
+
+		vector<double> temp;
+		temp.push_back(fx);
+		temp.push_back(fy);
+        it->setAccelerationByForce(&temp);
+
+		++it;
+	}
+
+	return 0;
+	
+}
+
 
 
 /*

@@ -54,7 +54,7 @@ void Particle::setAcceleration(vector<double>  * a)
 {
 	acceleration[0] = a->at(0);
 	acceleration[1] = a->at(1);
-}
+
 
 void Particle::setAccelerationByForce(vector<double> * f)
 {
@@ -73,6 +73,7 @@ double myDistance(Particle * p1, Particle * p2)
 	return sqrt(squarDistance(p1, p2));
 }
 
+
 void unitVector(Particle * p1, Particle * p2, vector<double> * unit)
 
 {
@@ -82,7 +83,6 @@ void unitVector(Particle * p1, Particle * p2, vector<double> * unit)
 	for (unsigned int i = 0; i < p1->position.size(); ++i){
 		unit->push_back(p2->position.at(i) - p1->position.at(i));
 		unit->at(i) = unit->at(i) / d;
-
 	}
 
 }
