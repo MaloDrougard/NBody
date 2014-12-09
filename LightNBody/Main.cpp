@@ -13,60 +13,101 @@
 
 using namespace std;
 
-
-char GENERATORFILE[100] = "tab1024";
-char RESULTFILE[100] = "result.txt";
+char GENERATORFILE[100]  = "tab128";
+char RESULTFILE[100]  = "result.txt";
 int COUNTPARTICLE = 100000;
 int NUMSLOT = 20;
 double DELTATIME = 1;
-int NUMTHREADS = 1;
-bool INPUT = true;
+const int NUMTHREADS = 4; 
+bool INPUT = false;
 
-void getInput();
+void getInfo();
 
 int main()
 {	
+	
 	TimeAnalyzer analyzer;
-	
-	if (INPUT){
-		getInput();
-	}
-	
-	/* initialization */
 
+	if (INPUT)
+	{
+		getInfo();
+	}
+
+
+	/* initialization */
 	vector<Particle>  set = GenerateSet(GENERATORFILE, COUNTPARTICLE);
-	NUMTHREADS = omp_get_num_threads();
-	initFile(RESULTFILE, set.size() , NUMTHREADS, NUMSLOT, DELTATIME);
+	analyzer.init(NUMTHREADS, NUMSLOT);
+	initFile(RESULTFILE, NUMTHREADS, set.size() , NUMSLOT, DELTATIME);
 	printToFile(&set, RESULTFILE);
 	int count = 0;
-	analyzer.init(NUMTHREADS, NUMSLOT);
-	 
-	/* core of the program */
-	cout << "Program start" << endl;
-	analyzer.totalTimes.at(0).start = omp_get_wtime();
+	 	
+	/* preparing the parallel section */ 
+	int subSetSize = set.size() / NUMTHREADS;
+	vector<vector<Particle>> subSet;
+	vector<Particle>::iterator it = set.begin();
+	for( int i = 0 ; i < NUMTHREADS - 1 ; ++i ) {
+		vector<Particle> temp (it , it + subSetSize);
+		subSet.push_back(temp);
+		it = it + subSetSize;
+	}
+	vector<Particle> last (it , set.end()); //it's possible that the numthread is not a divisor of the set.size
+	subSet.push_back(last);
+
+	int tid;
+	time_t threadTime;
+	
+
+#pragma omp parallel private(tid, count, threadTime) shared(set) num_threads(NUMTHREADS)
+{	
+	count = 0;
+	tid = omp_get_thread_num();
+	analyzer.totalTimes.at(tid).start = omp_get_wtime();
+	cout << "Thread: " << tid << "  start" << endl;
 
 	while (count < NUMSLOT){
-		NBodysAttraction(&set);
-		NBodysTravel(&set, DELTATIME);
+		analyzer.parallelTimes.at(tid).at(count).start = omp_get_wtime();
+		NBodysAttraction(&set, &(subSet.at(tid)) );
+		NBodysTravel(&(subSet.at(tid)), DELTATIME);
+		analyzer.parallelTimes.at(tid).at(count).end = omp_get_wtime();
+		
+#pragma omp barrier // the thread have all update her part
+#pragma omp single
+		{	
+			analyzer.soloTimes.at(tid).at(count).at(0).start = omp_get_wtime();
+			set.clear();
+			for(int i = 0; i < NUMTHREADS; ++i) {
+				set.insert(set.end(), subSet.at(i).begin(), subSet.at(i).end());
+			}
+			analyzer.soloTimes.at(tid).at(count).at(0).end = omp_get_wtime();
+		}
+
 		++count;
 	}
+	
+	analyzer.totalTimes.at(tid).end = omp_get_wtime();
+	cout << "Thread: " << tid << "EXUCTIONTIME: " <<  analyzer.getTotalTime(tid)  << " Prcoess particles: " << subSet.at(tid).size() << endl;
+
+}  /* All threads join master thread and terminate */
+
 
 	/* ending */
-	analyzer.totalTimes.at(0).end = omp_get_wtime();
-
+	
 	printToFile(&set, RESULTFILE);
 	rawTableToFile(&analyzer, RESULTFILE);
 
-	cout << "Execution time: " << analyzer.getTotalTime(0) << endl;
-	cout << "Type any character to close this program "  << endl;
-	getchar();
+	if (INPUT)
+	{
+		cout << "Type any character to close this program " << endl;
+		getchar();
+	}
 
 	return 0;
 }
 
 
 
-void getInput()
+
+void getInfo()
 {
 	/* get infos from user */
 	cout << "Hello Beatch!" << endl;
@@ -75,4 +116,5 @@ void getInput()
 
 	cout << "Enter the file name of the output file: " << endl;
 	gets(RESULTFILE);
+
 }
