@@ -22,6 +22,7 @@ public:
 
 	// calculate the new position after time t
 	void calculateNewPosition(double t); // in sec
+
 	void calculateNewVelocity(double t);
 	void setAcceleration(vector <double> * a);
 	void setAccelerationByForce(vector<double> * f);
@@ -29,7 +30,6 @@ public:
 	double distanceToPoint(vector<double> * point);
 	double squarDistanceToPoint(vector<double> *  point);
 	void unitVectorToPoint(vector<double> * point, vector<double> * unit);
-
 
 
 };
