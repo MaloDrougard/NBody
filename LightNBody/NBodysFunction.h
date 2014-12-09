@@ -1,7 +1,9 @@
 #pragma once
 
 #include <vector>
+#pragma once
 #include "Particle.h"
+#include "Tree.h"
 
 /*
  *This function take the a set of particles 
@@ -11,7 +13,12 @@ int NBodysAttraction(std::vector<Particle> * particlesSet);
 
 int NBodysAttraction(std::vector<Particle> * particlesSetRead , std::vector<Particle> * particlesToCompute);
 
-int NBodysTravel(std::vector<Particle> * particlesSet, double time );
+int NBodysTravel(std::vector<Particle> * particlesSet, double time);
+
+int BarnesHutAttractions(std::vector<Particle> * set, Tree *  look, double accurancy);
+vector<double> calculateAttraction(Particle * p, Tree * look, double accurancy); 
+double calculateAttractionX(Particle *  p, Tree * look, double accurancy, vector<double> * directionUnitTmp);
+double calculateAttractionY(Particle *  p, Tree * look, double accurancy, vector<double> * directionUnitTmp);
 
 const double G = 0.0000000000667259;  // 1; // 0.0000000000667259;
 

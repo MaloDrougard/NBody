@@ -75,11 +75,10 @@ double myDistance(Particle * p1, Particle * p2)
 
 
 void unitVector(Particle * p1, Particle * p2, vector<double> * unit)
-
 {
-	unit->clear() ;
+	unit->clear();
 	double d = myDistance(p1, p2);
-	
+
 	for (unsigned int i = 0; i < p1->position.size(); ++i){
 		unit->push_back(p2->position.at(i) - p1->position.at(i));
 		unit->at(i) = unit->at(i) / d;
@@ -87,4 +86,34 @@ void unitVector(Particle * p1, Particle * p2, vector<double> * unit)
 
 }
 
+void Particle::unitVectorToPoint(vector<double> * point, vector<double> * unit)
+{	
+	unit->clear();
 
+	double x = point->at(0) - position.at(0);
+	double y = point->at(1) - position.at(1);
+	double norme = distanceToPoint(point);
+
+	unit->push_back(x / norme);
+	unit->push_back( y / norme);
+
+}
+
+
+
+
+double Particle::distanceToPoint(vector<double> * point)
+{
+	return sqrt(squarDistanceToPoint(point));
+}
+
+
+
+double Particle::squarDistanceToPoint(vector<double> * point)
+{
+	double x = point->at(0) - position.at(0);
+	double y = point->at(1) - position.at(1);
+	return (pow(x, 2) + pow(y, 2));
+
+
+}
