@@ -26,10 +26,12 @@ int printToFile(vector<Particle> * pSet, const char * fileName) {
 }
 
 
-int initFile(const char * fileName, int numberParticles, int numberSlots, double deltaTime){
+int initFile(const char * fileName, int numThreads, int numberParticles, int numberSlots, double deltaTime){
 
 	ofstream ofs;
 	ofs.open(fileName, std::ofstream::out);
+	ofs << "METHOD: Basic ";
+	ofs << "NUMBER_OF_THREADS: " << numThreads << endl;
 	ofs << "NUMBER_OF_PARTICLE: " << numberParticles << "  ";
 	ofs << "NUMBER_OF_SLOT: " << numberSlots << "  ";
 	ofs << "DELTA_TIME: " << deltaTime << endl;

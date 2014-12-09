@@ -15,7 +15,7 @@
 
 int printToFile(vector<Particle> * pSet, const char * fileName);
 
-int initFile(const char * fileName, int numberParticles, int numberSlots, double deltaTime);
+int initFile(const char * fileName, int numberThreads, int numberParticles, int numberSlots, double deltaTime);
 
 int initFileBarnesHut(const char * fileName, int numThreads, int numberParticles, int numberSlots, double deltaTime, double accuracy);
 
