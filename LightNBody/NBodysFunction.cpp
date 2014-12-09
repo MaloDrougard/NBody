@@ -53,6 +53,26 @@ int NBodysAttraction(std::vector<Particle> * particlesSet)
 	return 0;
 	
 }
+
+
+int NBodysTravel(std::vector<Particle> * particlesSet, double time)
+{
+
+	for (int i = 0; i < (*particlesSet).size(); ++i){
+		(*particlesSet).at(i).calculateNewPosition(time);
+		(*particlesSet).at(i).calculateNewVelocity(time);
+
+	}
+
+	return 0;
+}
+
+
+/*
+* THE FOLLOWING METHODE ARE JUST TO TEST THE SPEED OF THE PROGRAM
+* DO NOT USE FOR REAL CALCULATION
+*/
+
 void FakeAccessAttraction(vector<Particle> *set)
 {	
 	
@@ -133,29 +153,6 @@ int OneCycle()
 	return p;
 }
 
-int NBodysTravel(std::vector<Particle> * particlesSet, double time)
-{
-
-	for (int i = 0; i < (*particlesSet).size(); ++i ){
-		(*particlesSet).at(i).calculateNewPosition(time);
-		(*particlesSet).at(i).calculateNewVelocity(time);
-
-	}
-
-	return 0;
-}
-
-int FakeNBodysTravel(int n)
-{	
-	int a = 0;
-	int b = 0;
-	for (int i = 0; i < n;  ++i){
-		a = 1 + 1 * 1 + 0.5 * 1 * 1 * 1;
-		b = 2 + 2 * 1 + 0.5 * 2 * 2 * 2;
-	}
-	
-	return 0;
-}
 void FakeAccessTravel(std::vector<Particle> * set)
 {
 
