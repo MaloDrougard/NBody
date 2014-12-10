@@ -13,60 +13,79 @@
 
 using namespace std;
 
-
-char GENERATORFILE[100] = "tab1024";
-char RESULTFILE[100] = "result.txt";
+char GENERATORFILE[100]  = "tab128";
+char RESULTFILE[100]  = "result.txt";
 int COUNTPARTICLE = 100000;
 int NUMSLOT = 20;
-double DELTATIME = 1;
 int NUMTHREADS = 1;
-bool INPUT = true;
+double DELTATIME = 1;
+double ACCURACY = 0.2;
+bool INPUT = false;
+Area baseArea( -50, 50, -50 , 50); 
 
-void getInput();
+void getInfo();
 
 int main()
 {	
-	TimeAnalyzer analyzer;
 	
-	if (INPUT){
-		getInput();
+	vector<Particle>  set;
+	vector<Particle> * rest;
+	TimeAnalyzer analyzer;
+	Tree * root;
+
+	if (INPUT)
+	{
+		getInfo();
 	}
 	
 	/* initialization */
-
-	vector<Particle>  set = GenerateSet(GENERATORFILE, COUNTPARTICLE);
+	rest = new vector<Particle>(0);
+	set = GenerateSet(GENERATORFILE, COUNTPARTICLE);
 	NUMTHREADS = omp_get_num_threads();
-	initFile(RESULTFILE, set.size() , NUMTHREADS, NUMSLOT, DELTATIME);
-	printToFile(&set, RESULTFILE);
-	int count = 0;
 	analyzer.init(NUMTHREADS, NUMSLOT);
+	initFileBarnesHut(RESULTFILE, NUMTHREADS, set.size() , NUMSLOT, DELTATIME, ACCURACY);
+	printToFile(&set, RESULTFILE);
+			
+	int count = 0;
 	 
 	/* core of the program */
-	cout << "Program start" << endl;
+	
+	cout << "Program start!" << endl;
 	analyzer.totalTimes.at(0).start = omp_get_wtime();
+	
 
 	while (count < NUMSLOT){
-		NBodysAttraction(&set);
+		analyzer.soloTimes.at(0).at(count).at(0).start = omp_get_wtime();
+		root = GenerateTree(set, (Tree *)NULL, baseArea, rest);
+		analyzer.soloTimes.at(0).at(count).at(0).end = omp_get_wtime();
+
+		analyzer.parallelTimes.at(0).at(count).start = omp_get_wtime();
+		BarnesHutAttractions(&set, root, ACCURACY);
 		NBodysTravel(&set, DELTATIME);
+		analyzer.parallelTimes.at(0).at(count).end = omp_get_wtime();
 		++count;
 	}
 
-	/* ending */
 	analyzer.totalTimes.at(0).end = omp_get_wtime();
 
+	/* print informations */
+	
 	printToFile(&set, RESULTFILE);
+	restSize(rest->size(), RESULTFILE);
 	rawTableToFile(&analyzer, RESULTFILE);
 
 	cout << "Execution time: " << analyzer.getTotalTime(0) << endl;
-	cout << "Type any character to close this program "  << endl;
-	getchar();
 
+	if (INPUT)
+	{
+		cout << "Type any character to close this program " << endl;
+		getchar();
+	}
+	
 	return 0;
 }
 
-
-
-void getInput()
+void getInfo()
 {
 	/* get infos from user */
 	cout << "Hello Beatch!" << endl;
