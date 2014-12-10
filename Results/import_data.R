@@ -1,6 +1,6 @@
 # i for index, s for start, e for end, n for name
 
-name = "result.txt"
+name = "r-128-t.txt"
 text = readLines(name)
 file_header = read.table(text = text[1])
 num_threads = file_header[1,4]
@@ -15,6 +15,7 @@ solo_part1_start_n = "SOLOTIME_START_PART1"
 solo_part1_end_n = "SOLOTIME_END_PART1"
 solo_part2_start_n = "SOLOTIME_START_PART2"
 solo_part2_end_n = "SOLOTIME_END_PART2"
+summary_n = "SUMMARY"
 
 getLineNum <- function(table_name){
   grep(table_name ,text, ignore.case = TRUE) + 1
@@ -58,10 +59,15 @@ dif_para = sapply( (para_e - para_s) , max ) - sapply( (para_e - para_s), min)
 dif_mean = mean(dif_para)
 
 #################### SUMMARY ##################################
-write("SUMMARY\n", name, append = TRUE)
 
+summary = matrix(NA, 1, 3)
+colnames(summary) = c("TIME_PER_SLOT", "NONE_PARALLEL_FRACTION", "DIFFERENCE_PARALLEL_SECTION")
+summary[1,1] = mean_time_per_slot
+summary[1,2] = f_mean_solo
+summary[1,3] = dif_mean
 
-
+write(summary_n, name, append = TRUE)
+write(summary, name,  append = TRUE, col.names = FALSE)
 
 #################### END AND CLEAR ############################
 
