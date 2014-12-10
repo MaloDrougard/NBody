@@ -16,10 +16,10 @@ using namespace std;
 char GENERATORFILE[100]  = "tab128";
 char RESULTFILE[100]  = "result.txt";
 int COUNTPARTICLE = 100000;
-int NUMSLOT = 1;
+int NUMSLOT = 20;
 double DELTATIME = 1;
 double ACCURACY = 0;
-int NUMTHREADS = 4;	
+int NUMTHREADS = 1;	
 bool INPUT = false;
 Area baseArea( -50, 50, -50 , 50); 
 
@@ -84,6 +84,7 @@ int main()
 
 				root = GenerateTree(set, (Tree *)NULL, baseArea);
 				
+
 				analyzer.soloTimes.at(tid).at(count).at(0).end = omp_get_wtime();
 			}// end of the single part
 
@@ -126,7 +127,6 @@ int main()
 	/* ending */
 	
 	printToFile(&set, RESULTFILE);
-	timeTable(&analyzer, RESULTFILE);
 	rawTableToFile(&analyzer, RESULTFILE);
 
 	if (INPUT){
