@@ -20,7 +20,7 @@ int NUMSLOT = 20;
 double DELTATIME = 1;
 double ACCURACY = 0;
 int NUMTHREADS = 1;	
-bool INPUT = false;
+bool INPUT = true;
 Area baseArea( -50, 50, -50 , 50); 
 
 void getInput(); 
