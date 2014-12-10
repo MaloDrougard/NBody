@@ -1,6 +1,6 @@
 # i for index, s for start, e for end, n for name
 
-name = "r-128-t.txt"
+name = "r-1024-tp-acc2-1.txt"
 text = readLines(name)
 file_header = read.table(text = text[1])
 num_threads = file_header[1,4]
@@ -66,8 +66,12 @@ summary[1,1] = mean_time_per_slot
 summary[1,2] = f_mean_solo
 summary[1,3] = dif_mean
 
-write(summary_n, name, append = TRUE)
-write(summary, name,  append = TRUE, col.names = FALSE)
+if(length(grep(summary_n, text, ignore.case = TRUE)) == 0){
+  write("\n" , name, append = TRUE)
+  write(summary_n , name, append = TRUE)
+  write.table(summary, name,  append = TRUE, col.names = TRUE)
+}
+
 
 #################### END AND CLEAR ############################
 
