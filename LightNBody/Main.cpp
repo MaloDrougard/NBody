@@ -18,23 +18,33 @@ char RESULTFILE[100]  = "result.txt";
 int COUNTPARTICLE = 100000;
 int NUMSLOT = 20;
 double DELTATIME = 1;
-const int NUMTHREADS = 4; 
+int NUMTHREADS = 4; 
+double ACCURACY = 0;
 bool INPUT = false;
 
 void getInfo();
+void setArguments(int argc, char* argv[]);
 
-int main()
+int main(int argc, char* argv[])
 {	
 	
-	TimeAnalyzer analyzer;
-
+	
+	setArguments(argc, argv);
 	if (INPUT)
 	{
 		getInfo();
 	}
 
+	cout << endl;
+	cout << "INPUT_FILE: " << GENERATORFILE << endl;
+	cout << "OUTPUT_FILE: " << RESULTFILE << endl;
+	cout << "NUMBER_OF_THREADS: " << NUMTHREADS << endl;
+	cout << "NUMBER_OF_SLOTS: " << NUMSLOT << endl;
+	cout << "DELTATIME: " << DELTATIME << endl;
+	cout << "ACCURACY: " << ACCURACY << endl << endl;
 
 	/* initialization */
+	TimeAnalyzer analyzer;
 	vector<Particle>  set = GenerateSet(GENERATORFILE, COUNTPARTICLE);
 	analyzer.init(NUMTHREADS, NUMSLOT);
 	initFile(RESULTFILE, NUMTHREADS, set.size() , NUMSLOT, DELTATIME);
@@ -105,6 +115,38 @@ int main()
 }
 
 
+
+void setArguments(int argc, char* argv[])
+{
+	if (argc == 1)
+	{
+		INPUT = true;
+	}
+	else if (argc == 6) // the first argument is allways the program name
+	{
+		INPUT = false;
+		strcpy(GENERATORFILE, argv[1]);
+		strcpy(RESULTFILE, argv[2]);
+		NUMTHREADS = atoi(argv[3]);
+		NUMSLOT = atoi(argv[4]);
+		DELTATIME = atof(argv[5]);
+	}
+	else if (argc == 7)
+	{
+		INPUT = false;
+		strcpy(GENERATORFILE, argv[1]);
+		strcpy(RESULTFILE, argv[2]);
+		NUMTHREADS = atoi(argv[3]);
+		NUMSLOT = atoi(argv[4]);
+		DELTATIME = atof(argv[5]);
+		ACCURACY = atof(argv[6]);
+	}
+	else
+	{
+		cerr << "invalide number of paramters";
+		exit(3);
+	}
+}
 
 
 void getInfo()
