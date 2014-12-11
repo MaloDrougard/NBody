@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 	TimeAnalyzer analyzer;
 	vector<Particle>  set = GenerateSet(GENERATORFILE, COUNTPARTICLE);
 	NUMTHREADS = omp_get_num_threads();
-	initFile(RESULTFILE, set.size() , NUMTHREADS, NUMSLOT, DELTATIME);
+	initFile(RESULTFILE, NUMTHREADS, set.size(), NUMSLOT, DELTATIME);
 	printToFile(&set, RESULTFILE);
 	int count = 0;
 	analyzer.init(NUMTHREADS, NUMSLOT);

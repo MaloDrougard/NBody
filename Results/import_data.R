@@ -1,6 +1,14 @@
 # i for index, s for start, e for end, n for name
 
-name = "r-1024-tp-acc2-1.txt"
+name = "defaut_input_file.txt"
+clear = FALSE #clean or not the value and data at the end of the script
+
+args <- myCommandArgs()
+if ( length(args) == 1){
+  name = args[1]
+  clear = TRUE
+}
+
 text = readLines(name)
 file_header = read.table(text = text[1])
 num_threads = file_header[1,4]
@@ -74,7 +82,14 @@ if(length(grep(summary_n, text, ignore.case = TRUE)) == 0){
 
 
 #################### END AND CLEAR ############################
-
+if(clear){
+  rm(solo_part1_s, solo_part1_e, solo_part2_s, solo_part2_e, total_s, total_e, para_s, para_e, file_header)
+  rm(solo, para, total_t)
+  rm(solo_part1_end_n, solo_part1_start_n, solo_part2_end_n, solo_part2_start_n,
+     total_end_n, total_start_n, para_end_n, para_start_n)
+  rm(args, clear, dif_mean, dif_para, f_mean_solo,f_solo,getLineNum,getTable, 
+     mean_time_per_slot, name, num_slots, num_threads,sum, summary_n, text, time_slots)   
+}
 
 
 
