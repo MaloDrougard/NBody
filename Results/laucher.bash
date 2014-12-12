@@ -1,6 +1,6 @@
 #!bash
 
-method="basic-parallel"
+method="tree-parallel"
 infile="tab8096"
 num_slots="100"
 delta_t="0.01"
