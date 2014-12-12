@@ -23,20 +23,30 @@ int NUMTHREADS = 1;
 bool INPUT = false;
 Area baseArea( -50, 50, -50 , 50); 
 
-void getInput(); 
+void getInput();
+void setArguments(int argc, char* argv[]);
 
-int main()
+int main(int argc, char* argv[])
 {	
-	
-	vector<Particle>  set;
-	vector<Particle> * rest;
 
-	Tree * root;
-	TimeAnalyzer analyzer;
-
+	setArguments(argc, argv); 
 	if (INPUT) {
 		getInput();
 	}
+
+	cout << endl;
+	cout << "INPUT_FILE: " << GENERATORFILE << endl;
+	cout << "OUTPUT_FILE: " << RESULTFILE << endl;
+	cout << "NUMBER_OF_THREADS: " << NUMTHREADS << endl;
+	cout << "NUMBER_OF_SLOTS: " << NUMSLOT << endl;
+	cout << "DELTATIME: " << DELTATIME << endl;
+	cout << "ACCURACY: " << ACCURACY << endl << endl;
+
+	vector<Particle>  set;
+	vector<Particle> * rest;
+	Tree * root;
+	TimeAnalyzer analyzer;
+
 	
 
 	/* initialization */
@@ -138,6 +148,11 @@ int main()
 	return 0;
 }
 
+
+
+
+
+
 void getInput(){
 	/* get infos from user */
 	cout << "Hello Beatch!" << endl;
@@ -156,4 +171,39 @@ void getInput(){
 	cin.ignore();
 
 }
+
+
+
+void setArguments(int argc, char* argv[])
+{
+	if (argc == 1)
+	{
+		INPUT = true;
+	}
+	else if (argc == 6) // the first argument is allways the program name
+	{
+		INPUT = false;
+		strcpy(GENERATORFILE, argv[1]);
+		strcpy(RESULTFILE, argv[2]);
+		NUMTHREADS = atoi(argv[3]);
+		NUMSLOT = atoi(argv[4]);
+		DELTATIME = atof(argv[5]);
+	}
+	else if (argc == 7)
+	{
+		INPUT = false;
+		strcpy(GENERATORFILE, argv[1]);
+		strcpy(RESULTFILE, argv[2]);
+		NUMTHREADS = atoi(argv[3]);
+		NUMSLOT = atoi(argv[4]);
+		DELTATIME = atof(argv[5]);
+		ACCURACY = atof(argv[6]);
+	}
+	else
+	{
+		cerr << "invalide number of paramters";
+		exit(3);
+	}
+}
+
 
