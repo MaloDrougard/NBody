@@ -10,7 +10,7 @@ create_files="$method-create-files.txt"
 touch "$create_files"
 
 outfile="r.txt"
-for num_thread in $(seq 28 64)
+for num_thread in $(seq 1 64)
 do
 	echo "NBody with $num_thread is lauch" 
 	outfile="r-$method-$infile-s$num_slots-a$accuracy-t$num_thread.txt"	

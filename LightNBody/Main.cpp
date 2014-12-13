@@ -20,7 +20,7 @@ int NUMSLOT = 20;
 double DELTATIME = 1;
 int NUMTHREADS = 4; 
 double ACCURACY = 0;
-bool INPUT = false;
+bool INPUT = true;
 
 void getInfo();
 void setArguments(int argc, char* argv[]);
@@ -55,14 +55,16 @@ int main(int argc, char* argv[])
 	int subSetSize = set.size() / NUMTHREADS;
 	vector<vector<Particle>> subSet;
 	vector<Particle>::iterator it = set.begin();
-	for( int i = 0 ; i < NUMTHREADS - 1 ; ++i ) {
-		vector<Particle> temp (it , it + subSetSize);
+	for (int i = 0; i < NUMTHREADS; ++i) {
+		vector<Particle> temp(it, it + subSetSize);
 		subSet.push_back(temp);
 		it = it + subSetSize;
 	}
-	vector<Particle> last (it , set.end()); //it's possible that the numthread is not a divisor of the set.size
-	subSet.push_back(last);
-
+	vector<Particle> remainder(it, set.end());
+	for(int i = 0; i < remainder.size(); ++i){
+		subSet.at(i).push_back(remainder.at(i));
+	}
+	
 	int tid;
 	time_t threadTime;
 	
@@ -159,4 +161,7 @@ void getInfo()
 	cout << "Enter the file name of the output file: " << endl;
 	gets(RESULTFILE);
 
+	cout << "Enter the number of threads: " << endl;
+	cin >> NUMTHREADS;
+	cin.ignore();
 }
