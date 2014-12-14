@@ -2,7 +2,7 @@
 
 
 method="tree-parallel"
-infile="tab8096"
+infile="tab65536"
 num_slots="100"
 delta_t="0.01"
 accuracy="0.2"
@@ -11,7 +11,7 @@ create_files="$method-create-files.txt"
 touch "$create_files"
 
 outfile="r.txt"
-for num_thread in $(seq 1 64)
+for num_thread in $(seq 61 64)
 do
         echo "NBody with $num_thread is lauch"
         outfile="r-$method-$infile-s$num_slots-a$accuracy-t$num_thread.txt"

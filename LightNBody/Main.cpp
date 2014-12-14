@@ -62,14 +62,15 @@ int main(int argc, char* argv[])
 	int subSetSize = set.size() / NUMTHREADS;
 	vector<vector<Particle>> subSet;
 	vector<Particle>::iterator it = set.begin();
-	for (int i = 0; i < NUMTHREADS - 1; ++i) {
+	for (int i = 0; i < NUMTHREADS; ++i) {
 		vector<Particle> temp(it, it + subSetSize);
 		subSet.push_back(temp);
 		it = it + subSetSize;
 	}
-	vector<Particle> last(it, set.end()); //it's possible that the numthread is not a divisor of the set.size
-	subSet.push_back(last);
-
+	vector<Particle> remainder(it, set.end());
+	for(int i = 0; i < remainder.size(); ++i){
+		subSet.at(i).push_back(remainder.at(i));
+	}
 
 	/* core of the program */
 
