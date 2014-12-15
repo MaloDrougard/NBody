@@ -41,14 +41,14 @@ int main(int argc, char* argv[])
 	cout << "NUMBER_OF_THREADS: " << NUMTHREADS << endl;
 	cout << "NUMBER_OF_SLOTS: " << NUMSLOT << endl;
 	cout << "DELTATIME: " << DELTATIME << endl;
-	cout << "ACCURACY: " << ACCURACY << endl << endl;
+	cout << "ACCURACY: " << ACCURACY << endl;
+	cout << "NUM_PARTICLES:" << COUNTPARTICLE << endl << endl;
 
 	/* initialization */
 	TimeAnalyzer analyzer;
 	vector<Particle>  set = GenerateSet(GENERATORFILE, COUNTPARTICLE);
 	analyzer.init(NUMTHREADS, NUMSLOT);
 	initFile(RESULTFILE, NUMTHREADS, set.size() , NUMSLOT, DELTATIME);
-	printToFile(&set, RESULTFILE);
 	int count = 0;
 	 	
 	/* preparing the parallel section */ 
@@ -104,7 +104,6 @@ int main(int argc, char* argv[])
 
 	/* ending */
 	
-	printToFile(&set, RESULTFILE);
 	rawTableToFile(&analyzer, RESULTFILE);
 
 	if (INPUT)
@@ -142,6 +141,17 @@ void setArguments(int argc, char* argv[])
 		NUMSLOT = atoi(argv[4]);
 		DELTATIME = atof(argv[5]);
 		ACCURACY = atof(argv[6]);
+	}
+	else if (argc == 8)
+	{
+		INPUT = false;
+		strcpy(GENERATORFILE, argv[1]);
+		strcpy(RESULTFILE, argv[2]);
+		NUMTHREADS = atoi(argv[3]);
+		NUMSLOT = atoi(argv[4]);
+		DELTATIME = atof(argv[5]);
+		ACCURACY = atof(argv[6]);
+		COUNTPARTICLE = atoi(argv[7]);
 	}
 	else
 	{
