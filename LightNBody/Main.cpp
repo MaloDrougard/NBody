@@ -37,6 +37,7 @@ int main(int argc, char* argv[])
 	cout << endl;
 	cout << "INPUT_FILE: " << GENERATORFILE << endl;
 	cout << "OUTPUT_FILE: " << RESULTFILE << endl;
+	cout << "NUM_PARTICLES: " << COUNTPARTICLE << endl;
 	cout << "NUMBER_OF_THREADS: " << NUMTHREADS << endl;
 	cout << "NUMBER_OF_SLOTS: " << NUMSLOT << endl;
 	cout << "DELTATIME: " << DELTATIME << endl;
@@ -53,7 +54,6 @@ int main(int argc, char* argv[])
 	rest = new vector<Particle>(0);
 	set = GenerateSet(GENERATORFILE, COUNTPARTICLE);
 	initFileBarnesHut(RESULTFILE, NUMTHREADS, set.size() , NUMSLOT, DELTATIME, ACCURACY);
-	printToFile(&set, RESULTFILE);
 	analyzer.init(NUMTHREADS, NUMSLOT);
 	int count = 0;
 	 
@@ -137,7 +137,6 @@ int main(int argc, char* argv[])
 	
 	/* ending */
 	
-	printToFile(&set, RESULTFILE);
 	rawTableToFile(&analyzer, RESULTFILE);
 
 	if (INPUT){
@@ -199,6 +198,17 @@ void setArguments(int argc, char* argv[])
 		NUMSLOT = atoi(argv[4]);
 		DELTATIME = atof(argv[5]);
 		ACCURACY = atof(argv[6]);
+	}
+	else if (argc == 8 )
+	{	
+		INPUT = false;
+		strcpy(GENERATORFILE, argv[1]);
+		strcpy(RESULTFILE, argv[2]);
+		NUMTHREADS = atoi(argv[3]);
+		NUMSLOT = atoi(argv[4]);
+		DELTATIME = atof(argv[5]);
+		ACCURACY = atof(argv[6]);
+		COUNTPARTICLE = atoi(argv[7]);
 	}
 	else
 	{
