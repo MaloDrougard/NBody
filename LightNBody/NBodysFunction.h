@@ -20,7 +20,8 @@ vector<double> calculateAttraction(Particle * p, Tree * look, double accurancy);
 double calculateAttractionX(Particle *  p, Tree * look, double accurancy, vector<double> * directionUnitTmp);
 double calculateAttractionY(Particle *  p, Tree * look, double accurancy, vector<double> * directionUnitTmp);
 
-const double G = 0.0000000000667259;  // 1; // 0.0000000000667259;
+void setG(double newG);
+double getG();
 
 /* this function are just for testing the program */
 void FakeAccessTravel(std::vector<Particle> * set);

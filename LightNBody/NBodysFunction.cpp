@@ -9,6 +9,11 @@
 using namespace std;
 int OPPERCYCLE = 1;
 
+double G = 0.0000000000667259;  // 1; // 0.0000000000667259;
+void setG(double newG){ G = newG; };
+double getG(){ return G; };
+
+
 
 int NBodysAttraction(std::vector<Particle> * particlesSet)
 {
