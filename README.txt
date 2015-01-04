@@ -6,7 +6,8 @@ The initial particles states are given in a separate file and
 the finale states is return in a other separate file. 
 This project was  done to measure performance of different 
 implementation. This is why there is a directory Results who contents
-some time measures.  
+some time measures. The measures was done on an AMD opteron with 
+64 cores  
 This is, also, why there is multiples branch. Each branch contains a
 implementation:
 
