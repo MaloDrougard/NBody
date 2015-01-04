@@ -9,7 +9,7 @@ name = "r-basic-parallel-tab8096-p253-s30-t1.txt"
 clear = FALSE #clean or not the value and data at the end of the script
 
 # uncomment this to bound this with the plot.R
-myCommandArgs = function() NULL
+# myCommandArgs = function() NULL
 
 args <- myCommandArgs()
 if ( length(args) == 1){
