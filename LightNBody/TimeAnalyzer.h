@@ -9,8 +9,14 @@ using namespace std;
 */
 class TimeBubble{ 
 public:
-	double start = 0;
-	double end = 0;
+	double start;
+	double end;
+	TimeBubble() {
+		start = 0;
+		end = 0;
+	};
+
+
 };
 
 /*
