@@ -20,4 +20,9 @@ for(e in files_to_process){
   i = i + 1
 }
 
-plot(sm[,4], sm[,1])
+pdf("basic-time-complexity.pdf", width=6, heigh=4)
+plot(sm[,4], sm[,1], xlab="number of particles", ylab="time per slot",col="blue")
+dev.off()
+
+
+
